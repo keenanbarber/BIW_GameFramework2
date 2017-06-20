@@ -2,13 +2,9 @@
 
 var MyGame = MyGame || {}; // Creates namespace if haven't already. 
 
-var playerDirection = "RIGHT";
 var player;
-var colliding = false;
-var BOTTOM_BOUND = 300;
-var TOP_BOUND = 50;
-var LEFT_BOUND = 50;
-var RIGHT_BOUND = 400;
+var transitionRect;
+var t;
 
 MyGame.GameState = function() {
 	"use strict"; 
@@ -24,191 +20,69 @@ MyGame.GameState.prototype.init = function(game_details_data) {
 	this.MINIMUM_SWIPE_LENGTH = 50;
 	
 	window.addEventListener('resize', this.onResize);
-	window.addEventListener("deviceorientation", this.handleAccelerometer, true);  // Accelerometer
 };
 
 MyGame.GameState.prototype.onResize = function() { // TESTING
-	console.log("Resized");
-
-	if(device === "MOBILE") {
-		if(window.innerWidth > window.innerHeight) {
-			deviceOrientation = "LANDSCAPE";
-		}
-		else {
-			deviceOrientation = "PORTRAIT";
-		}
-	}
-	else {
-		deviceOrientation = "LANDSCAPE";
-	}
-
-
+	"use strict";
+	//console.log("Resized");
+	deviceOrientation = (device === "MOBILE" ? 
+							(window.innerWidth > window.innerHeight ? "LANDSCAPE" : "PORTRAIT") : 
+							"LANDSCAPE");
 	console.log(deviceOrientation);
-	game.scale.refresh();
-
 };
 
 MyGame.GameState.prototype.create = function() {
 	"use strict"; 
 
+	//t = Transition('silver');
+	//t.tweenTranslate(Phaser.Easing.Bounce.Out, 1400, "BOTTOM_TO_TOP");
+
 	// Add events to check for swipe
 	this.game.input.onDown.add(this.start_swipe, this);
 	this.game.input.onUp.add(this.end_swipe, this);
 
-	player = this.makeText("0 ", { font: "40px Arial", fill: "#ffffff", align: "center" });
+	player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+	player.setPartialColor(1, 2, "orange");
+
 };
 
 MyGame.GameState.prototype.update = function() {
 	"use strict"; 
-
-	console.log("Update");
-	
-	this.updatePlayer();
+	//console.log("Update");
 };
 
-MyGame.GameState.prototype.updatePlayer = function() {
-	let amount = 2;
-	if(!colliding) {
-		amount = amount*3;
-	}
-	if(playerDirection === "RIGHT") {
-		player.x += amount;
-		if(player.x >= RIGHT_BOUND && player.y >= BOTTOM_BOUND) {
-			playerDirection = "UP";
-			player.x = RIGHT_BOUND;
-			player.y = BOTTOM_BOUND;
-		}
-		else if(player.x >= RIGHT_BOUND && player.y <= TOP_BOUND) {
-			playerDirection = "DOWN";
-			player.x = RIGHT_BOUND;
-			player.y = TOP_BOUND;
-		}
-		else if(player.x <= LEFT_BOUND) {
-			playerDirection = "DOWN"; 
-			player.x = LEFT_BOUND;
-		}
-		else if(player.x >= RIGHT_BOUND) {
-			playerDirection = "UP"; 
-			player.x = RIGHT_BOUND;
-		}
-	}
-	else if(playerDirection === "LEFT") {
-		player.x -= amount;
-		if(player.x <= LEFT_BOUND && player.y >= BOTTOM_BOUND) {
-			playerDirection = "UP";
-			player.x = LEFT_BOUND;
-			player.y = BOTTOM_BOUND;
-		}
-		else if(player.x <= LEFT_BOUND && player.y <= TOP_BOUND) {
-			playerDirection = "DOWN";
-			player.x = LEFT_BOUND;
-			player.y = TOP_BOUND;
-		}
-		else if(player.x <= LEFT_BOUND) {
-			playerDirection = "DOWN"; 
-			player.x = LEFT_BOUND;
-		}
-		else if(player.x >= RIGHT_BOUND) {
-			playerDirection = "UP"; 
-			player.x = RIGHT_BOUND;
-		}
-	}
-	else if(playerDirection === "UP") {
-		player.y -= amount;
-		if(player.y <= TOP_BOUND && player.x >= RIGHT_BOUND) {
-			playerDirection = "LEFT";
-			player.x = RIGHT_BOUND;
-			player.y = TOP_BOUND;
-		}
-		else if(player.y <= TOP_BOUND && player.x <= LEFT_BOUND) {
-			playerDirection = "RIGHT";
-			player.x = LEFT_BOUND;
-			player.y = TOP_BOUND;
-		}
-		else if(player.y <= TOP_BOUND) {
-			playerDirection = "RIGHT"; 
-			player.y = TOP_BOUND;
-		}
-		else if(player.y >= BOTTOM_BOUND) {
-			playerDirection = "LEFT"; 
-			player.y = BOTTOM_BOUND;
-		}
-	}
-	else if(playerDirection === "DOWN") {
-		player.y += amount;
-		if(player.y >= BOTTOM_BOUND && player.x >= RIGHT_BOUND) {
-			playerDirection = "LEFT";
-			player.x = RIGHT_BOUND;
-			player.y = BOTTOM_BOUND;
-		}
-		else if(player.y >= BOTTOM_BOUND && player.x <= LEFT_BOUND) {
-			playerDirection = "RIGHT";
-			player.x = LEFT_BOUND;
-			player.y = BOTTOM_BOUND;
-		}
-		else if(player.y <= TOP_BOUND) {
-			playerDirection = "RIGHT"; 
-			player.y = TOP_BOUND;
-		}
-		else if(player.y >= BOTTOM_BOUND) {
-			playerDirection = "LEFT";
-			player.y = BOTTOM_BOUND; 
-		}
-	}
-	colliding = this.playerCheckCollisions();
+MyGame.GameState.prototype.render = function() {
+	"use strict"; 
+	//t.render();
 };
 
 MyGame.GameState.prototype.start_swipe = function (pointer) {
     "use strict";
-    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+    //console.log("Press down.");
 
-	console.log("Press down.");
+    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 };
 
 MyGame.GameState.prototype.end_swipe = function (pointer) {
     "use strict";	
+    //console.log("Press up.");
     if(this.start_swipe_point != null && this.end_swipe_point == null) {
 
 	    var swipe_length
 	    this.end_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    swipe_length = Phaser.Point.distance(this.end_swipe_point, this.start_swipe_point);
 
-	    console.log(swipe_length);
+	    //console.log(swipe_length);
 	    // if the swipe length is greater than the minimum, a swipe is detected
 	    if (swipe_length >= this.MINIMUM_SWIPE_LENGTH) {
 	        let calculatedSwipeDirectionVector = new Phaser.Point(this.end_swipe_point.x - this.start_swipe_point.x, this.end_swipe_point.y - this.start_swipe_point.y).normalize();
 		    
-		    this.setPlayerDirection(this.findDirectionOfSwipe(calculatedSwipeDirectionVector));
+		    this.findDirectionOfSwipe(calculatedSwipeDirectionVector);
 	    }
-	    console.log("Press up.");
-
 	}
 
     this.end_swipe_point = null;
     this.start_swipe_point = null;
-};
-
-MyGame.GameState.prototype.playerCheckCollisions = function() {
-	if(player.y <= TOP_BOUND || player.y >= BOTTOM_BOUND || player.x <= LEFT_BOUND || player.x >= RIGHT_BOUND) {
-		return true;
-	}
-};
-
-MyGame.GameState.prototype.setPlayerDirection = function(d) {
-	if(colliding) {
-		if(d.x == 1 && player.x < RIGHT_BOUND) {
-			playerDirection = "RIGHT";
-		}
-		else if(d.x == -1 && player.x > LEFT_BOUND) {
-			playerDirection = "LEFT";
-		}
-		else if(d.y == 1 && player.y < BOTTOM_BOUND) {
-			playerDirection = "DOWN";
-		}
-		else if(d.y == -1 && player.y > TOP_BOUND) {
-			playerDirection = "UP";
-		}
-	}
 };
 
 MyGame.GameState.prototype.findDirectionOfSwipe = function(d) {
@@ -219,66 +93,34 @@ MyGame.GameState.prototype.findDirectionOfSwipe = function(d) {
 	let currentVector = null;
 	let dist = 0;
 
-	currentVector = new Phaser.Point(-1, 0); // Up
+	currentVector = new Phaser.Point(-1, 0);
 	bestDist = d.distance(currentVector);
-	bestVector = currentVector;
+	bestVector = "LEFT";
 
-	currentVector = new Phaser.Point(1, 0); // Down
+	currentVector = new Phaser.Point(1, 0);
 	dist = d.distance(currentVector);
 	if(dist < bestDist) {
 		bestDist = dist;
-		bestVector = currentVector;
+		bestVector = "RIGHT";
 	}
 
-	currentVector = new Phaser.Point(0, -1); // Left
+	currentVector = new Phaser.Point(0, -1);
 	dist = d.distance(currentVector);
 	if(dist < bestDist) {
 		bestDist = dist;
-		bestVector = currentVector;
+		bestVector = "UP";
 	}
 
-	currentVector = new Phaser.Point(0, 1); // Right
+	currentVector = new Phaser.Point(0, 1);
 	dist = d.distance(currentVector);
 	if(dist < bestDist) {
 		bestDist = dist;
-		bestVector = currentVector;
+		bestVector = "DOWN";
 	}
 
-	console.log("Best Vector: " + bestVector);
+	console.log("Swipe: " + bestVector);
 	return bestVector;
 };
-
-MyGame.GameState.prototype.handleAccelerometer = function(e) {
-    var z = e.alpha;
-    var y = e.beta;
-    var x = e.gamma;
-    console.log("Orientation: x=" + x + ", y=" + y + ", z=" + z);
-};
-
-MyGame.GameState.prototype.makeText = function(t, style) {
-	let text = game.add.text(game.world.centerX, game.world.centerY, t, style);
-    text.anchor.set(0.5);
-    this.colorText(text, 1, 4, "#ffff00", "#ffffff")
-    return text;
-};
-
-MyGame.GameState.prototype.colorText = function(t, x1, x2, newColor, originalColor) {
-	t.addColor(newColor, x1);
-    t.addColor(originalColor, x2);
-};
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

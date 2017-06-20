@@ -23,7 +23,7 @@ MyGame.BootState.prototype.init = function(game_details) {
 
 	// Determines if mobile or desktop.
 	if (game.device.desktop) {  
-		console.log("This is not running on a mobile device. 1");
+		console.log("This is not running on a mobile device.");
 		game.scale.minWidth = 400;  
 		game.scale.minHeight = 300;  
 		game.scale.maxWidth = 800;
@@ -31,7 +31,7 @@ MyGame.BootState.prototype.init = function(game_details) {
 		device = "DESKTOP";
 	}
 	else {  
-		console.log("This is running on a mobile device. 1");
+		console.log("This is running on a mobile device.");
 		device = "MOBILE";
 	}
 
@@ -40,16 +40,6 @@ MyGame.BootState.prototype.init = function(game_details) {
 	//this.scale.forceLandscape = true;
 	
 	game.scale.refresh();
-
-	// Determines if mobile or desktop.
-	if (/Mobile|Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
-	    console.log("This is running on a mobile device. 2");
-	    device = "MOBILE";
-	}
-	else {
-		console.log("This is not running on a mobile device. 2");
-		device = "DESKTOP";
-	}
 };
 
 MyGame.BootState.prototype.preload = function() {
