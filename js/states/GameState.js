@@ -5,6 +5,7 @@ var MyGame = MyGame || {}; // Creates namespace if haven't already.
 var player;
 var transitionRect;
 var t;
+var physics;
 
 MyGame.GameState = function() {
 	"use strict"; 
@@ -17,6 +18,7 @@ MyGame.GameState.prototype.constructor = MyGame.GameState;
 MyGame.GameState.prototype.init = function(game_details_data) {
 	"use strict";
 	this.game_details_data = game_details_data;
+	physics = Physics();
 	this.MINIMUM_SWIPE_LENGTH = 40;
 	
 	window.addEventListener('resize', this.onResize);
@@ -44,6 +46,12 @@ MyGame.GameState.prototype.create = function() {
 	player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
 	player.setPartialColor(1, 2, "orange");
 
+
+	let thing = game.add.sprite(150, 150, 'test_image');
+	physics.applyPhysicsTo(thing);
+	physics.setGravity(thing, 0, 500);
+	physics.collideWorldBounds(thing, true);
+	physics.setBounce(thing, 0.8);
 };
 
 MyGame.GameState.prototype.update = function() {

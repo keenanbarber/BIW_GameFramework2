@@ -48,7 +48,6 @@ MyGame.LoadingState.prototype.preload = function() {
             switch (asset.type) {
             case "image":
                 this.load.image(asset_key, asset.source);
-                console.log("Found one image");
                 break;
             }
         }

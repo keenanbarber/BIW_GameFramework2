@@ -126,13 +126,13 @@ function Physics() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
     obj.applyPhysicsTo = function(thing) {
-    	thing.physicsBodyType = Phaser.Physics.ARCADE;
+    	game.physics.enable(thing, Phaser.Physics.ARCADE);
     };
     obj.beginCollisionBetween = function(thing1, thing2, whatToCallWhenCollides) {
     	game.physics.arcade.collide(ball, bricks, whatToCallWhenCollides, null, this);
     };
     obj.setBounce = function(thing, value) {
-    	thing.body.bounce = value;
+    	thing.body.bounce.set(value);
     };
     obj.setImmovable = function(thing, bool) {
     	thing.body.immovable = bool;
@@ -142,6 +142,9 @@ function Physics() {
     };
     obj.checkOverlap = function(thing1, thing2, whatToCallWhenOverlaps) {
     	return game.physics.arcade.overlap(thing1, thing2, whatToCallWhenOverlaps, null, this);
+    };
+    obj.collideWorldBounds = function(thing, bool) {
+    	thing.body.collideWorldBounds = bool;
     };
 
     return obj;
