@@ -1,7 +1,7 @@
 {
-	"assets": {
-		
-	}, 
+	 "assets": {
+        "test_image": {"type": "image", "source": "assets/images/apple.png"}
+    },
 	"game_details": {
 		"screen_width": 600, 
 		"screen_height": 400 

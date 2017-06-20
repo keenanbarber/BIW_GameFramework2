@@ -19,6 +19,7 @@ MyGame.LoadingState.prototype.init = function(game_details_data) {
 MyGame.LoadingState.prototype.preload = function() {
 	"use strict"; 
 
+	// USER DETAILS
 	var user_details, user_detail_key, detail;
 	user_details = this.game_details_data.user_details;
 	for(user_detail_key in user_details) {
@@ -38,7 +39,20 @@ MyGame.LoadingState.prototype.preload = function() {
 		}
 	}
 
-
+	// ASSETS
+	var assets, asset_loader, asset_key, asset;
+    assets = this.game_details_data.assets;
+    for (asset_key in assets) { // load assets according to asset key
+        if (assets.hasOwnProperty(asset_key)) {
+            asset = assets[asset_key];
+            switch (asset.type) {
+            case "image":
+                this.load.image(asset_key, asset.source);
+                console.log("Found one image");
+                break;
+            }
+        }
+    }
 };
 
 MyGame.LoadingState.prototype.create = function() {

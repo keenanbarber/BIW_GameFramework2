@@ -17,7 +17,7 @@ MyGame.GameState.prototype.constructor = MyGame.GameState;
 MyGame.GameState.prototype.init = function(game_details_data) {
 	"use strict";
 	this.game_details_data = game_details_data;
-	this.MINIMUM_SWIPE_LENGTH = 50;
+	this.MINIMUM_SWIPE_LENGTH = 40;
 	
 	window.addEventListener('resize', this.onResize);
 };
