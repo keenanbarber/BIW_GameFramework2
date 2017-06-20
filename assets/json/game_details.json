@@ -1,0 +1,16 @@
+{
+	"assets": {
+		
+	}, 
+	"game_details": {
+		"screen_width": 600, 
+		"screen_height": 400 
+	},
+	"user_details": {
+		"name": "Keenan", 
+		"points": 1000
+	},
+	"prefabs": {
+
+	}
+}
