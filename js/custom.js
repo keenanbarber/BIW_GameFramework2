@@ -212,6 +212,35 @@ function SpriteButton(x, y, imageKey, onInputOverFunc, onInputOutFunc, onInputDo
 };
 
 
+/*_______________________________________
+		ANIMATIONS						|
+_________________________________________
+EXAMPLE: 
+
+	?????
+_________________________________________*/
+function MyAnimationManager(sprite, fps) {
+	let obj = {};
+	obj.sprite = sprite;
+	obj.fps = fps;
+	obj.animations = [];
+
+	obj.AddAnimation = function(animName, frames) {
+		let animation = this.sprite.animations.add(animName, frames, this.fps, true, true);
+		this.animations.push(animation);
+	};
+	obj.PlayAnimation = function(animName, loop) {
+		for(let i = 0; i < this.animations.length; i++) {
+			if(this.animations[i].name === animName) {
+				this.sprite.animations.play(animName, this.fps, loop);
+				return;
+			}
+		}
+	};
+
+    return obj;
+};
+
 
 /*_______________________________________
 		PHYSICS 						|
@@ -295,6 +324,41 @@ function AccessAccelerometer(sendDataTo) {
 function test() {
 	console.log("This is a test.");
 }
+
+
+
+
+
+
+
+function scaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier, isFullScale) {
+	var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
+	sprite.scale.x = scale * scaleMultiplier;
+	sprite.scale.y = scale * scaleMultiplier;
+}
+function getSpriteScale (spriteWidth, spriteHeight, availableSpaceWidth, availableSpaceHeight, minPadding, isFullScale) {
+	var ratio = 1;
+	var currentDevicePixelRatio = window.devicePixelRatio;
+	// Sprite needs to fit in either width or height
+	var widthRatio = (spriteWidth * currentDevicePixelRatio + 2 * minPadding) / availableSpaceWidth;
+	var heightRatio = (spriteHeight * currentDevicePixelRatio + 2 * minPadding) / availableSpaceHeight;
+	if(widthRatio > 1 || heightRatio > 1){
+		ratio = 1 / Math.max(widthRatio, heightRatio);
+	} else {
+		if(isFullScale)
+			ratio = 1 / Math.max(widthRatio, heightRatio);
+	}
+	return ratio * currentDevicePixelRatio;	
+}
+
+
+
+
+
+
+
+
+
 
 
 

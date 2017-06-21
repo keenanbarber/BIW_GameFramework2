@@ -41,7 +41,6 @@ MyGame.GameState.prototype = {
 		let thing1 = game.add.sprite(150, 150, 'test_image');
 		let thing2 = game.add.sprite(250, 250, 'test_image');
 		let thing3 = game.add.sprite(350, 350, 'test_image');
-
 		
 		let testButton = SpriteButton(400, 350, 'test_image', 
 			function() { //On mouse over...

@@ -5,7 +5,6 @@ var MyGame = MyGame || {}; // Creates namespace if haven't already.
 var player;
 var transitionRect;
 var t;
-var physics;
 
 MyGame.MenuState = function() {
 	"use strict"; 
@@ -18,8 +17,6 @@ MyGame.MenuState.prototype = {
 		this.MINIMUM_SWIPE_LENGTH = 40;
 		this.sceneProps
 
-
-		physics = Physics();
 		window.addEventListener('resize', this.onResize);
 	},
 	
@@ -52,11 +49,6 @@ MyGame.MenuState.prototype = {
 		//player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
 		//player.setPartialColor(1, 2, "orange");
 
-
-		// physics.applyPhysicsTo(thing1);
-		// physics.setGravity(thing1, 0, 500);
-		// physics.collideWorldBounds(thing1, true);
-		// physics.setBounce(thing1, 0.8);
 
 		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 	},
