@@ -1,6 +1,7 @@
 {
 	 "assets": {
-        "test_image": {"type": "image", "source": "assets/images/apple.png"}
+        "test_image": {"type": "image", "source": "assets/images/apple.png"}, 
+        "test_beep" : {"type": "audio", "source": "assets/audio/Beep1.wav"}
     },
 	"game_details": {
 		"screen_width": 600, 

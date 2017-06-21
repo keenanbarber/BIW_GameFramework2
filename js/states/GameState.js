@@ -2,7 +2,7 @@
 
 var MyGame = MyGame || {}; // Creates namespace if haven't already. 
 
-var player;
+var text_test;
 var transitionRect;
 var t;
 var physics;
@@ -30,6 +30,11 @@ MyGame.GameState.prototype = {
 
 	create: function() {
 		"use strict"; 
+		// Add events to check for swipe
+		this.game.input.onDown.add(this.start_swipe, this);
+		this.game.input.onUp.add(this.end_swipe, this);
+
+
 
 		this.sceneProps = game.add.group();
 
@@ -41,18 +46,8 @@ MyGame.GameState.prototype = {
 		this.sceneProps.add(thing2);
 		this.sceneProps.add(thing3);
 
-		//game.add.tween(sceneProps).to({x: 300, y: 0}, 2000, Phaser.Easing.Bounce.Out, true);
-
-		//t = Transition('silver');
-		//t.tweenTranslate(Phaser.Easing.Bounce.Out, 1400, "BOTTOM_TO_TOP");
-
-		// Add events to check for swipe
-		this.game.input.onDown.add(this.start_swipe, this);
-		this.game.input.onUp.add(this.end_swipe, this);
-
-		player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
-		player.setPartialColor(1, 2, "orange");
-
+		text_test = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+		text_test.setPartialColor(1, 2, "orange");
 
 		// physics.applyPhysicsTo(thing1);
 		// physics.setGravity(thing1, 0, 500);

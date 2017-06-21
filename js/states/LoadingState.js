@@ -49,9 +49,11 @@ MyGame.LoadingState.prototype = {
 	        if (assets.hasOwnProperty(asset_key)) {
 	            asset = assets[asset_key];
 	            switch (asset.type) {
-	            case "image":
-	                this.load.image(asset_key, asset.source);
-	                break;
+		            case "image":
+		                this.load.image(asset_key, asset.source);
+		                break;
+		            case "audio": 
+		            	this.load.audio(asset_key, asset.source);
 	            }
 	        }
 	    }
