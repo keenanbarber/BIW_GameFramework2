@@ -41,8 +41,9 @@ MyGame.BootState.prototype = {
 	preload: function() {
 		"use strict"; 
 		this.load.text("game_details", this.game_details);
+		this.load.image("loading", "assets/images/snake.png")
 	}, 
-	
+
 	create: function() {
 		"use strict"; 
 		var game_details_text, game_details_data; 
