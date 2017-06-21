@@ -108,42 +108,32 @@ function FadeTween(direction, duration, easing) {
 	}
 	return obj;
 }
-function enterNewScene(newScenesProps, _tween) {
+function TweenProps(props, _tween) {
 	let tween;
 	switch(_tween.tweenType) {
 		case "TRANSLATE": 
-			newScenesProps.x = _tween.start_x;
-			newScenesProps.y = _tween.start_y;
-			tween = game.add.tween(newScenesProps).to({x: _tween.end_x, y: _tween.end_y}, _tween.duration, _tween.easing, true);
+			props.x = _tween.start_x;
+			props.y = _tween.start_y;
+			tween = game.add.tween(props).to({x: _tween.end_x, y: _tween.end_y}, _tween.duration, _tween.easing, true);
 			break;
 		case "FADE": 
-			newScenesProps.alpha = _tween.start_a;
-			tween = game.add.tween(newScenesProps).to({ alpha: _tween.end_a }, _tween.duration, _tween.easing, true);
+			props.alpha = _tween.start_a;
+			tween = game.add.tween(props).to({ alpha: _tween.end_a }, _tween.duration, _tween.easing, true);
 			break;
 		default: 
-			console.log("ERROR: Failed to translate properly.");
+			console.log("ERROR: Failed to tween properly.");
 	}
-	
+	return tween;
+}
+function EnterNewScene(newScenesProps, _tween) {
+	TweenProps(newScenesProps, _tween);
 	//tween.onComplete.add(clearSceneProps, this);
 }
-function exitPreviousScene(previousScenesProps, _tween) {
-	let tween;
-	switch(_tween.tweenType) {
-		case "TRANSLATE": 
-			previousScenesProps.x = _tween.start_x;
-			previousScenesProps.y = _tween.start_y;
-			tween = game.add.tween(previousScenesProps).to({x: _tween.end_x, y: _tween.end_y}, _tween.duration, _tween.easing, true);
-			break;
-		case "FADE": 
-			previousScenesProps.alpha = _tween.start_a;
-			tween = game.add.tween(previousScenesProps).to({ alpha: _tween.end_a }, _tween.duration, _tween.easing, true);
-			break;
-		default: 
-			console.log("ERROR: Failed to translate properly.");
-	}
-	tween.onComplete.add(function() { clearSceneProps(previousScenesProps); }, this);
+function ExitPreviousScene(previousScenesProps, _tween) {
+	let tween = TweenProps(previousScenesProps, _tween);
+	tween.onComplete.add(function() { ClearSceneProps(previousScenesProps); }, this);
 }
-function clearSceneProps(group) {
+function ClearSceneProps(group) {
 	group.removeAll();
 }
 
@@ -153,8 +143,8 @@ function clearSceneProps(group) {
 _________________________________________
 EXAMPLE: 
 
-	player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
-	player.setPartialColor(1, 2, "orange");
+	textTest = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+	textTest.setPartialColor(1, 2, "orange");
 _________________________________________*/
 function Text(t, style) {
 	let obj = {};
@@ -182,6 +172,47 @@ function Text(t, style) {
 };
 
 
+
+/*_______________________________________
+		SPRITE BUTTON					|
+_________________________________________
+EXAMPLE: 
+
+	let testButton = SpriteButton(400, 350, 'test_image', 
+		function() { //On mouse over...
+			console.log("Over");
+		}, 
+		function() { //On mouse off...
+			console.log("Off");
+		},
+		function() { //On mouse down...
+			console.log("Down");
+		}, 
+		function() { //On mouse up...
+			console.log("Up");
+		}
+	);
+_________________________________________*/
+function SpriteButton(x, y, imageKey, onInputOverFunc, onInputOutFunc, onInputDownFunc, onInputUpFunc) {
+	let obj = {};
+	obj.sprite = game.add.sprite(x, y, imageKey);
+	obj.sprite.inputEnabled = true;
+
+	obj.onInputOverFunc = onInputOverFunc;
+	obj.onInputOutFunc = onInputOutFunc;
+	obj.onInputDownFunc = onInputDownFunc;
+	obj.onInputUpFunc = onInputUpFunc;
+
+	obj.sprite.events.onInputOver.add(obj.onInputOverFunc, this);
+	obj.sprite.events.onInputOut.add(obj.onInputOutFunc, this);
+	obj.sprite.events.onInputDown.add(obj.onInputDownFunc, this);
+	obj.sprite.events.onInputUp.add(obj.onInputUpFunc, this);
+
+    return obj;
+};
+
+
+
 /*_______________________________________
 		PHYSICS 						|
 _________________________________________
@@ -193,7 +224,7 @@ EXAMPLE:
 	physics.setGravity(thing1, 0, 500);
 	physics.collideWorldBounds(thing1, true);
 	physics.setBounce(thing1, 0.8);
-*/
+_________________________________________*/
 
 function Physics() {
 	let obj = {};

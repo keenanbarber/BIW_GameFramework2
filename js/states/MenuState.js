@@ -58,7 +58,7 @@ MyGame.MenuState.prototype = {
 		// physics.collideWorldBounds(thing1, true);
 		// physics.setBounce(thing1, 0.8);
 
-		enterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 	},
 
 	update: function() {

@@ -21,7 +21,7 @@ MyGame.GameState.prototype = {
 		physics = Physics();
 		window.addEventListener('resize', this.onResize);
 
-		exitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_LEFT", 1000, Phaser.Easing.Bounce.Out));
+		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
 	},
 
 	preload: function() {
@@ -42,6 +42,23 @@ MyGame.GameState.prototype = {
 		let thing2 = game.add.sprite(250, 250, 'test_image');
 		let thing3 = game.add.sprite(350, 350, 'test_image');
 
+		
+		let testButton = SpriteButton(400, 350, 'test_image', 
+			function() { //On mouse over...
+				console.log("Over");
+			}, 
+			function() { //On mouse off...
+				console.log("Off");
+			},
+			function() { //On mouse down...
+				console.log("Down");
+			}, 
+			function() { //On mouse up...
+				console.log("Up");
+			}
+		);
+		
+
 		this.sceneProps.add(thing1);
 		this.sceneProps.add(thing2);
 		this.sceneProps.add(thing3);
@@ -54,7 +71,7 @@ MyGame.GameState.prototype = {
 		// physics.collideWorldBounds(thing1, true);
 		// physics.setBounce(thing1, 0.8);
 
-		enterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 	},
 
 	update: function() {
