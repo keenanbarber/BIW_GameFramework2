@@ -2,95 +2,159 @@
 /*_______________________________________
 		TRANSITIONS 					|
 _________________________________________
-	ARGS
+EXAMPLE
 	o transitionTypes: 
 		- Phaser.Easing.Bounce.Out
 		- Phaser.Easing.Cubic.In
 		- Phaser.Easing.Linear.None
+
+	init()...
+	exitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_LEFT", 1000, Phaser.Easing.Bounce.Out));
+
+	create()...
+	enterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 ________________________________________*/
-function Transition(col) {
+function TranslateTween(direction, duration, easing) {
 	let obj = {};
-	obj.rect = new Phaser.Rectangle(0, 0, game.scale.width, game.scale.height); // <-- x, y, width, height
-	obj.color = col;
+	obj.tweenType = "TRANSLATE";
+	obj.direction = direction;
+	obj.duration = duration;
+	obj.easing = easing;
 
-	obj.tweenTranslate = function(transitionType, duration, direction) {
-		let start_x = 0;
-		let start_y = 0;
-		let end_x = 0; 
-		let end_y = 0;
-		switch(direction) {
-			case "LEFT_TO_CENTER": 
-				start_x = -game.scale.width;
-				start_y = 0;
-				end_x = 0;
-				end_y = 0;
-				break; 
-			case "RIGHT_TO_CENTER": 
-				start_x = game.scale.width;
-				start_y = 0;
-				end_x = 0;
-				end_y = 0;
-				break;
-			case "TOP_TO_CENTER": 
-				start_x = 0;
-				start_y = -game.scale.height;
-				end_x = 0;
-				end_y = 0;
-				break;
-			case "BOTTOM_TO_CENTER": 
-				start_x = 0;
-				start_y = game.scale.height;
-				end_x = 0;
-				end_y = 0;
-				break;
-			case "CENTER_TO_LEFT": 
-				start_x = 0;
-				start_y = 0;
-				end_x = -game.scale.width;
-				end_y = 0;
-				break;
-			default: 
-				console.log("ERROR: Unable to perform that specific translate transition.")
-				start_x = -game.scale.width;
-				start_y = 0;
-				end_x = 0;
-				end_y = 0;
-		}
-
-		this.rect.x = start_x;
-		this.rect.y = start_y;
-		game.add.tween(this.rect).to({x: end_x, y: end_y}, duration, transitionType, true);
-	};
-	/* obj.tweenFade = function(transitionType, duration, direction) { 		<----- DOESN'T WORK
-		let start_a = 0;
-		let end_a = 0;
-		switch(direction) {
-			case "VISIBLE_TO_INVISIBLE": 
-				start_a = 1;
-				end_a = 0;
-				break; 
-			case "INVISIBLE_TO_VISIBLE": 
-				start_a = 0;
-				end_a = 1;
-				break;
-			default: 
-				console.log("ERROR: Unable to perform that specific fade transition.")
-				start_a = 1;
-				end_a = 0;
-		}
-		this.rect.alpha = start_a;
-		//console.log(this.rect.alpha + ", " + start_a + ", " + end_a);
-		game.add.tween(this.rect).to({alpha: end_a}, duration, transitionType, true);
-	}; */
-	obj.render = function() {
-		game.debug.geom(this.rect, this.color);
-	};
+	obj.start_x = 0;
+	obj.start_y = 0;
+	obj.end_x = 0; 
+	obj.end_y = 0;
+	switch(direction) {
+		case "LEFT_TO_CENTER": 
+			obj.start_x = -game.scale.width;
+			obj.start_y = 0;
+			obj.end_x = 0;
+			obj.end_y = 0;
+			break; 
+		case "RIGHT_TO_CENTER": 
+			obj.start_x = game.scale.width;
+			obj.start_y = 0;
+			obj.end_x = 0;
+			obj.end_y = 0;
+			break;
+		case "TOP_TO_CENTER": 
+			obj.start_x = 0;
+			obj.start_y = -game.scale.height;
+			obj.end_x = 0;
+			obj.end_y = 0;
+			break;
+		case "BOTTOM_TO_CENTER": 
+			obj.start_x = 0;
+			obj.start_y = game.scale.height;
+			obj.end_x = 0;
+			obj.end_y = 0;
+			break;
+		case "CENTER_TO_LEFT": 
+			obj.start_x = 0;
+			obj.start_y = 0;
+			obj.end_x = -game.scale.width;
+			obj.end_y = 0;
+			break;
+		case "CENTER_TO_RIGHT": 
+			obj.start_x = 0;
+			obj.start_y = 0;
+			obj.end_x = game.scale.width;
+			obj.end_y = 0;
+			break;
+		case "CENTER_TO_TOP": 
+			obj.start_x = 0;
+			obj.start_y = 0;
+			obj.end_x = 0;
+			obj.end_y = -game.scale.height;
+			break;
+		case "CENTER_TO_BOTTOM": 
+			obj.start_x = 0;
+			obj.start_y = 0;
+			obj.end_x = 0;
+			obj.end_y = game.scale.height;
+			break;
+		default: 
+			console.log("ERROR: Unable to perform that specific TRANSLATE transition.")
+			obj.start_x = -game.scale.width;
+			obj.start_y = 0;
+			obj.end_x = 0;
+			obj.end_y = 0;
+	}
 	return obj;
+}
+function FadeTween(direction, duration, easing) {
+	let obj = {};
+	obj.tweenType = "FADE";
+	obj.direction = direction;
+	obj.duration = duration;
+	obj.easing = easing;
+
+	obj.start_a = 0; 
+	obj.end_a = 0;
+	switch(direction) {
+		case "FADE_OUT": 
+			obj.start_a = 1;
+			obj.end_a = 0;
+			break; 
+		case "FADE_IN": 
+			obj.start_a = 0;
+			obj.end_a = 1;
+			break;
+		default: 
+			console.log("ERROR: Unable to perform that specific FADE transition.")
+			obj.start_a = 1;
+			obj.end_a = 0;
+	}
+	return obj;
+}
+function enterNewScene(newScenesProps, _tween) {
+	let tween;
+	switch(_tween.tweenType) {
+		case "TRANSLATE": 
+			newScenesProps.x = _tween.start_x;
+			newScenesProps.y = _tween.start_y;
+			tween = game.add.tween(newScenesProps).to({x: _tween.end_x, y: _tween.end_y}, _tween.duration, _tween.easing, true);
+			break;
+		case "FADE": 
+			newScenesProps.alpha = _tween.start_a;
+			tween = game.add.tween(newScenesProps).to({ alpha: _tween.end_a }, _tween.duration, _tween.easing, true);
+			break;
+		default: 
+			console.log("ERROR: Failed to translate properly.");
+	}
+	
+	//tween.onComplete.add(clearSceneProps, this);
+}
+function exitPreviousScene(previousScenesProps, _tween) {
+	let tween;
+	switch(_tween.tweenType) {
+		case "TRANSLATE": 
+			previousScenesProps.x = _tween.start_x;
+			previousScenesProps.y = _tween.start_y;
+			tween = game.add.tween(previousScenesProps).to({x: _tween.end_x, y: _tween.end_y}, _tween.duration, _tween.easing, true);
+			break;
+		case "FADE": 
+			previousScenesProps.alpha = _tween.start_a;
+			tween = game.add.tween(previousScenesProps).to({ alpha: _tween.end_a }, _tween.duration, _tween.easing, true);
+			break;
+		default: 
+			console.log("ERROR: Failed to translate properly.");
+	}
+	tween.onComplete.add(function() { clearSceneProps(previousScenesProps); }, this);
+}
+function clearSceneProps(group) {
+	group.removeAll();
 }
 
 
 /*_______________________________________
 		TEXT 							|
+_________________________________________
+EXAMPLE: 
+
+	player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+	player.setPartialColor(1, 2, "orange");
 _________________________________________*/
 function Text(t, style) {
 	let obj = {};
@@ -120,7 +184,17 @@ function Text(t, style) {
 
 /*_______________________________________
 		PHYSICS 						|
-_________________________________________*/
+_________________________________________
+EXAMPLE: 
+
+	var physics = Physics();
+
+	physics.applyPhysicsTo(thing1);
+	physics.setGravity(thing1, 0, 500);
+	physics.collideWorldBounds(thing1, true);
+	physics.setBounce(thing1, 0.8);
+*/
+
 function Physics() {
 	let obj = {};
     game.physics.startSystem(Phaser.Physics.ARCADE);

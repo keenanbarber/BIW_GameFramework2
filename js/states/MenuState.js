@@ -7,23 +7,22 @@ var transitionRect;
 var t;
 var physics;
 
-MyGame.GameState = function(game) {
+MyGame.MenuState = function() {
 	"use strict"; 
 };
 
-
-MyGame.GameState.prototype = {
-	init: function(game_details_data, previousState) {
+MyGame.MenuState.prototype = {
+	init: function(game_details_data) {
 		"use strict";
 		this.game_details_data = game_details_data;
 		this.MINIMUM_SWIPE_LENGTH = 40;
+		this.sceneProps
+
 
 		physics = Physics();
 		window.addEventListener('resize', this.onResize);
-
-		exitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_LEFT", 1000, Phaser.Easing.Bounce.Out));
 	},
-
+	
 	preload: function() {
 
 	},
@@ -33,9 +32,9 @@ MyGame.GameState.prototype = {
 
 		this.sceneProps = game.add.group();
 
-		let thing1 = game.add.sprite(150, 150, 'test_image');
-		let thing2 = game.add.sprite(250, 250, 'test_image');
-		let thing3 = game.add.sprite(350, 350, 'test_image');
+		let thing1 = game.add.sprite(250, 150, 'test_image');
+		let thing2 = game.add.sprite(350, 150, 'test_image');
+		let thing3 = game.add.sprite(450, 150, 'test_image');
 
 		this.sceneProps.add(thing1);
 		this.sceneProps.add(thing2);
@@ -50,8 +49,8 @@ MyGame.GameState.prototype = {
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
 
-		player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
-		player.setPartialColor(1, 2, "orange");
+		//player = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+		//player.setPartialColor(1, 2, "orange");
 
 
 		// physics.applyPhysicsTo(thing1);
@@ -65,7 +64,7 @@ MyGame.GameState.prototype = {
 	update: function() {
 		"use strict"; 
 		//console.log("Update");
-	},
+	}, 
 
 	onResize: function() {
 		"use strict";
@@ -80,8 +79,8 @@ MyGame.GameState.prototype = {
 		"use strict";
 	    //console.log("Press down.");
 	    //this.exitTransition();
-	    //this.game.state.start("GameState", false, false, this.game_details_data, this);
-	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+	    this.game.state.start("GameState", false, false, this.game_details_data, this);
+	    //this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	},
 
 	end_swipe: function(pointer) {
@@ -143,5 +142,4 @@ MyGame.GameState.prototype = {
 		return bestVector;
 	}
 };
-
 
