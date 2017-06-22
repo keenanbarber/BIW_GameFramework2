@@ -208,38 +208,40 @@ function SpriteButton(x, y, imageKey, onInputOverFunc, onInputOutFunc, onInputDo
 	obj.sprite.events.onInputDown.add(obj.onInputDownFunc, this);
 	obj.sprite.events.onInputUp.add(obj.onInputUpFunc, this);
 
+	obj.getSprite = function() {
+		return this.sprite;
+	};
+
     return obj;
 };
+
 
 
 /*_______________________________________
-		ANIMATIONS						|
-_________________________________________
-EXAMPLE: 
-
-	?????
+		FLIP SPRITES					|		<---- May not quite work...
 _________________________________________*/
-function MyAnimationManager(sprite, fps) {
-	let obj = {};
-	obj.sprite = sprite;
-	obj.fps = fps;
-	obj.animations = [];
-
-	obj.AddAnimation = function(animName, frames) {
-		let animation = this.sprite.animations.add(animName, frames, this.fps, true, true);
-		this.animations.push(animation);
-	};
-	obj.PlayAnimation = function(animName, loop) {
-		for(let i = 0; i < this.animations.length; i++) {
-			if(this.animations[i].name === animName) {
-				this.sprite.animations.play(animName, this.fps, loop);
-				return;
-			}
-		}
-	};
-
-    return obj;
-};
+function FlipSprite(sprite, axis, anchor_x, anchor_y) {
+	let originalAnchor = sprite.anchor;
+	
+	switch(axis) {
+		case "X_AXIS": 
+			sprite.anchor.setTo(anchor_x, anchor_y);
+			sprite.scale.x = -sprite.scale.x;
+			sprite.anchor.setTo(originalAnchor.x, originalAnchor.y);
+			break;
+		case "Y_AXIS": 
+			sprite.anchor.setTo(anchor_x, anchor_y);
+			sprite.scale.y = -sprite.scale.y;
+			sprite.anchor.setTo(originalAnchor.x, originalAnchor.y);
+			break;
+		default: 
+			console.log("ERROR: Failed to flip the sprite on that axis. ");
+			sprite.anchor.setTo(anchor_x, anchor_y);
+			sprite.scale.x = -sprite.scale.x;
+			sprite.anchor.setTo(originalAnchor.x, originalAnchor.y);
+			break;
+	}
+}
 
 
 /*_______________________________________

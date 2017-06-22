@@ -56,6 +56,11 @@ MyGame.GameState.prototype = {
 				console.log("Up");
 			}
 		);
+
+
+		let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
+		let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
+		spriteThing.animations.play('walk', 12, true);
 		
 
 		this.sceneProps.add(thing1);

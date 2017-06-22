@@ -26,7 +26,7 @@ MyGame.BootState.prototype = {
 			game.scale.maxHeight = 600;
 			device = "DESKTOP";
 		}
-		else {  
+		else { 
 			console.log("This is running on a mobile device.");
 			device = "MOBILE";
 		}

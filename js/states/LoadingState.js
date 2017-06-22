@@ -52,6 +52,9 @@ MyGame.LoadingState.prototype = {
 		            case "image":
 		                this.load.image(asset_key, asset.source);
 		                break;
+		            case "spritesheet": 
+		            	this.load.spritesheet(asset_key, asset.source, asset.frame_width, asset.frame_height, asset.frame_count);
+		            	break;
 		            case "audio": 
 		            	this.load.audio(asset_key, asset.source);
 	            }
