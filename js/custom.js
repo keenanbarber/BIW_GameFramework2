@@ -344,21 +344,6 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	sprite.scale.x = scale * scaleMultiplier;
 	sprite.scale.y = scale * scaleMultiplier;
 }
-function getSpriteScale (spriteWidth, spriteHeight, availableSpaceWidth, availableSpaceHeight, minPadding, isFullScale) {
-	var ratio = 1;
-	var currentDevicePixelRatio = window.devicePixelRatio;
-	// Sprite needs to fit in either width or height
-	//var heightRatio = (spriteHeight + (2 * minPadding)) / availableSpaceHeight;
-	//if(widthRatio > 1 || heightRatio > 1){
-
-	//} else {
-	//	if(isFullScale)
-	//		ratio = 1 / Math.max(widthRatio, heightRatio);
-	//}
-	return ratio;	
-}
-
-
 
 
 
