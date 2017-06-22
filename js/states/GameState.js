@@ -6,6 +6,7 @@ var text_test;
 var transitionRect;
 var t;
 var physics;
+var start_button1;
 
 MyGame.GameState = function(game) {
 	"use strict"; 
@@ -56,6 +57,16 @@ MyGame.GameState.prototype = {
 				console.log("Up");
 			}
 		);
+
+		
+		start_button1 = game.add.button(this.world.centerX, 3 * (400/4), "test_start", test, this);
+		start_button1.anchor.setTo(0.5);
+		start_button1.clicked = false;
+		ScaleSprite(start_button1, 600, 400/4, 10, 1, 1); // Need to hard-code 600 & 400 for now.
+
+
+
+
 
 
 		let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');

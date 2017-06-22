@@ -333,8 +333,14 @@ function test() {
 
 
 
-function scaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier, isFullScale) {
-	var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
+function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier, isFullScale) {
+	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
+	
+	let widthRatio = (availableSpaceWidth - (padding)) / (sprite._frame.width + (padding));
+	let heightRatio = (availableSpaceHeight - (padding)) / (sprite._frame.height + (padding));
+	console.log("NUMS: " + widthRatio + ", " + heightRatio);
+	let scale = Math.min(widthRatio, heightRatio);
+
 	sprite.scale.x = scale * scaleMultiplier;
 	sprite.scale.y = scale * scaleMultiplier;
 }
@@ -342,15 +348,14 @@ function getSpriteScale (spriteWidth, spriteHeight, availableSpaceWidth, availab
 	var ratio = 1;
 	var currentDevicePixelRatio = window.devicePixelRatio;
 	// Sprite needs to fit in either width or height
-	var widthRatio = (spriteWidth * currentDevicePixelRatio + 2 * minPadding) / availableSpaceWidth;
-	var heightRatio = (spriteHeight * currentDevicePixelRatio + 2 * minPadding) / availableSpaceHeight;
-	if(widthRatio > 1 || heightRatio > 1){
-		ratio = 1 / Math.max(widthRatio, heightRatio);
-	} else {
-		if(isFullScale)
-			ratio = 1 / Math.max(widthRatio, heightRatio);
-	}
-	return ratio * currentDevicePixelRatio;	
+	//var heightRatio = (spriteHeight + (2 * minPadding)) / availableSpaceHeight;
+	//if(widthRatio > 1 || heightRatio > 1){
+
+	//} else {
+	//	if(isFullScale)
+	//		ratio = 1 / Math.max(widthRatio, heightRatio);
+	//}
+	return ratio;	
 }
 
 
