@@ -6,7 +6,6 @@ var text_test;
 var transitionRect;
 var t;
 var physics;
-var start_button1;
 
 MyGame.GameState = function(game) {
 	"use strict"; 
@@ -20,7 +19,6 @@ MyGame.GameState.prototype = {
 		this.MINIMUM_SWIPE_LENGTH = 40;
 
 		physics = Physics();
-		window.addEventListener('resize', this.onResize);
 
 		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
 	},
@@ -39,44 +37,52 @@ MyGame.GameState.prototype = {
 
 		this.sceneProps = game.add.group();
 
-		let thing1 = game.add.sprite(150, 150, 'test_image');
-		let thing2 = game.add.sprite(250, 250, 'test_image');
-		let thing3 = game.add.sprite(350, 350, 'test_image');
+		this.thing1 = game.add.sprite(150, 150, 'test_image');
+		this.thing1.anchor.setTo(0.5);
+		this.thing2 = game.add.sprite(250, 250, 'test_image');
+		this.thing2.anchor.setTo(0.5);
+		this.thing3 = game.add.sprite(350, 350, 'test_image');
+		this.thing3.anchor.setTo(0.5);
+
+
+
 		
-		let testButton = SpriteButton(400, 350, 'test_image', 
+		let testButton = SpriteButton(50, 350, 'test_image');
+		testButton.setBehaviors(
 			function() { //On mouse over...
 				console.log("Over");
+				Tweenimate_ElasticScale(testButton.getSprite(), 2, 2, 1000);
 			}, 
 			function() { //On mouse off...
 				console.log("Off");
+				Tweenimate_ElasticScale(testButton.getSprite(), 1, 1, 1000);
 			},
 			function() { //On mouse down...
 				console.log("Down");
+				Tweenimate_ElasticScale(testButton.getSprite(), 4, 4, 1000);
 			}, 
 			function() { //On mouse up...
 				console.log("Up");
+				Tweenimate_ElasticScale(testButton.getSprite(), 4, 4, 1000);
 			}
 		);
 
 		
-		start_button1 = game.add.button(this.world.centerX, 3 * (400/4), "test_start", test, this);
-		start_button1.anchor.setTo(0.5);
-		start_button1.clicked = false;
-		ScaleSprite(start_button1, 600, 400/4, 10, 1, 1); // Need to hard-code 600 & 400 for now.
-
-
-
-
-
-
-		let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
-		let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
-		spriteThing.animations.play('walk', 12, true);
+		this.start_button1 = game.add.button(this.world.centerX, this.world.centerY, "test_image", test, this);
+		this.start_button1.anchor.setTo(0.5);
+		this.start_button1.clicked = false;
 		
 
-		this.sceneProps.add(thing1);
-		this.sceneProps.add(thing2);
-		this.sceneProps.add(thing3);
+
+
+		//let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
+		//let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
+		//spriteThing.animations.play('walk', 12, true);
+		
+
+		this.sceneProps.add(this.thing1);
+		this.sceneProps.add(this.thing2);
+		this.sceneProps.add(this.thing3);
 
 		text_test = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
 		text_test.setPartialColor(1, 2, "orange");
@@ -87,6 +93,9 @@ MyGame.GameState.prototype = {
 		// physics.setBounce(thing1, 0.8);
 
 		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+
+		this.positionComponents(game.width, game.height);
+		this.initializeTiles();
 	},
 
 	update: function() {
@@ -94,14 +103,23 @@ MyGame.GameState.prototype = {
 		//console.log("Update");
 	},
 
-	onResize: function() {
-		"use strict";
-		//console.log("Resized");
-		deviceOrientation = (device === "MOBILE" ? 
-								(window.innerWidth > window.innerHeight ? "LANDSCAPE" : "PORTRAIT") : 
-								"LANDSCAPE");
-		console.log(deviceOrientation);
+	positionComponents: function(width, height) {
+		ScaleSprite(this.start_button1, game.width, game.height, 100, 1, 1); 
+		this.start_button1.x = this.world.centerX; 
+		this.start_button1.y = this.world.centerY;
 	},
+
+	resize: function(width, height) {
+		"use strict";
+		UpdateScreenInfo();
+		//console.log("Resized");
+
+		this.positionComponents(width, height);
+
+		game.scale.refresh();
+	},
+
+	
 
 	start_swipe: function(pointer) {
 		"use strict";
@@ -109,6 +127,8 @@ MyGame.GameState.prototype = {
 	    //this.exitTransition();
 	    //this.game.state.start("GameState", false, false, this.game_details_data, this);
 	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+	    //Tweenimate_Breathe(this.thing1, 1.5, 1.5, 1200);
+
 	},
 
 	end_swipe: function(pointer) {
@@ -168,7 +188,36 @@ MyGame.GameState.prototype = {
 
 		console.log("Swipe: " + bestVector);
 		return bestVector;
+	}, 
+
+	initializeTiles: function() {
+		/* tiles = [ [], [], [], [] ];
+		  		     []  []  []  []
+		  	 	     []  []  []  []		*/
+
+
+		this.tilesArray = [];
+		this.tileGroup = game.add.group();
+		let columnCount = 5;
+		let rowCount = 4;
+
+		for(let i = 0; i < columnCount; i++) {
+			this.tilesArray[i] = [];
+			for(let j = 0; j < rowCount; j++) { 
+				let tileX = i * 15;
+				let tileY = j * 15;
+				let tile = game.add.sprite(tileX, tileY, "test_image");
+				tile.anchor.set(0.5);
+				//ScaleSprite(tile, game.width, game.height, 0, 1);
+				this.tilesArray[i][j] = tile;
+				this.tileGroup.add(tile);
+			}
+		}
+
 	}
+
+
+
 };
 
 

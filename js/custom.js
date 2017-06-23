@@ -138,6 +138,28 @@ function ClearSceneProps(group) {
 }
 
 
+
+
+/*_______________________________________
+		Tweenimation					|
+_________________________________________*/
+function Tweenimate_ElasticScale(prop, goalScaleX, goalScaleY, duration) {
+	let tween = game.add.tween(prop.scale).to({ x: goalScaleX, y: goalScaleY }, duration, Phaser.Easing.Elastic.Out, true);
+}
+function Tweenimate_ElasticTranslate(prop, goalPosX, goalPosY, duration) {
+	let tween = game.add.tween(prop).to({ x: goalPosX, y: goalPosY }, duration, Phaser.Easing.Elastic.Out, true);
+}
+function Tweenimate_Breathe(prop, maxScaleX, maxScaleY, duration) {
+	let tween = game.add.tween(prop.scale).to({ x: maxScaleX, y: maxScaleY }, duration/2, Phaser.Easing.Exponential.Out, true);
+	tween.onComplete.addOnce(function() {
+		tween = game.add.tween(prop.scale).to({ x: 1, y: 1 }, duration/2, Phaser.Easing.Exponential.Out, true);
+	}, this);
+}
+function Tweenimate_SpinWobble(prop, goalAngle, duration) {
+	let tween = game.add.tween(prop).to({ angle: goalAngle }, duration, Phaser.Easing.Elastic.Out, true);
+}
+
+
 /*_______________________________________
 		TEXT 							|
 _________________________________________
@@ -193,23 +215,32 @@ EXAMPLE:
 		}
 	);
 _________________________________________*/
-function SpriteButton(x, y, imageKey, onInputOverFunc, onInputOutFunc, onInputDownFunc, onInputUpFunc) {
+function SpriteButton(x, y, imageKey) {
 	let obj = {};
 	obj.sprite = game.add.sprite(x, y, imageKey);
+	obj.sprite.anchor.set(0.5);
 	obj.sprite.inputEnabled = true;
 
-	obj.onInputOverFunc = onInputOverFunc;
-	obj.onInputOutFunc = onInputOutFunc;
-	obj.onInputDownFunc = onInputDownFunc;
-	obj.onInputUpFunc = onInputUpFunc;
+	obj.onInputOverFunc;
+	obj.onInputOutFunc;
+	obj.onInputDownFunc;
+	obj.onInputUpFunc;
 
-	obj.sprite.events.onInputOver.add(obj.onInputOverFunc, this);
-	obj.sprite.events.onInputOut.add(obj.onInputOutFunc, this);
-	obj.sprite.events.onInputDown.add(obj.onInputDownFunc, this);
-	obj.sprite.events.onInputUp.add(obj.onInputUpFunc, this);
+	
 
 	obj.getSprite = function() {
 		return this.sprite;
+	};
+	obj.setBehaviors = function(onInputOverFunc, onInputOutFunc, onInputDownFunc, onInputUpFunc) {
+		this.onInputOverFunc = onInputOverFunc;
+		this.onInputOutFunc = onInputOutFunc;
+		this.onInputDownFunc = onInputDownFunc;
+		this.onInputUpFunc = onInputUpFunc;
+
+		this.sprite.events.onInputOver.add(this.onInputOverFunc, this);
+		this.sprite.events.onInputOut.add(this.onInputOutFunc, this);
+		this.sprite.events.onInputDown.add(this.onInputDownFunc, this);
+		this.sprite.events.onInputUp.add(this.onInputUpFunc, this);
 	};
 
     return obj;
@@ -333,18 +364,50 @@ function test() {
 
 
 
-function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier, isFullScale) {
+function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
 	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
 	
-	let widthRatio = (availableSpaceWidth - (padding)) / (sprite._frame.width + (padding));
-	let heightRatio = (availableSpaceHeight - (padding)) / (sprite._frame.height + (padding));
-	console.log("NUMS: " + widthRatio + ", " + heightRatio);
-	let scale = Math.min(widthRatio, heightRatio);
+	let currentDevicePixelRatio = window.devicePixelRatio;
 
-	sprite.scale.x = scale * scaleMultiplier;
-	sprite.scale.y = scale * scaleMultiplier;
+	let spriteWidth = sprite._frame.width;
+	let spriteHeight = sprite._frame.height;
+
+	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	
+	let scale = Math.min(widthRatio, heightRatio);
+	
+	sprite.scale.setTo(scale * scaleMultiplier, scale * scaleMultiplier);
+	game.scale.refresh();
+
+	
+	console.log("Pixel Ratio: " + currentDevicePixelRatio);
+	console.log("Screen Width: " + availableSpaceWidth + ", Screen Height: " + availableSpaceHeight);
+	console.log("(" + availableSpaceWidth + " + (" + (2*padding) + ")) / " + spriteWidth  + " = " + widthRatio);
+	console.log("(" + availableSpaceHeight + " + (" + (2*padding) + ")) / " + spriteHeight + " = " + heightRatio);
+	console.log("Scale: " + scale);
+	console.log("Sprite Width: " + sprite.width + ", with padding of: " + (availableSpaceWidth-sprite.width));
+	console.log("Sprite Height: " + sprite.height + ", with padding of: " + (availableSpaceHeight-sprite.height));
+	
 }
 
+function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
+	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
+	
+	let currentDevicePixelRatio = window.devicePixelRatio;
+
+	let spriteWidth = prop.width;
+	let spriteHeight = prop.height;
+
+	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	
+	let scale = Math.min(widthRatio, heightRatio);
+	
+	prop.scale.set(scale * scaleMultiplier, scale * scaleMultiplier);
+	game.scale.refresh();
+	
+}
 
 
 

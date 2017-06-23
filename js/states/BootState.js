@@ -4,6 +4,7 @@ var MyGame = MyGame || {}; /* <---- This is used to create a namespace, or a nam
 												under which functions and variables can be created
 												without polluting the global object. More info: (https://stackoverflow.com/questions/6439579/what-does-var-foo-foo-assign-a-variable-or-an-empty-object-to-that-va) */
 
+
 MyGame.BootState = function(game) {
 	"use strict"; /* <-------- Defines that JavaScript code should be executed in "strict mode".
 								It turns previously accepted "bad syntax" into real errors. */
@@ -15,7 +16,7 @@ MyGame.BootState.prototype = {
 		"use strict";
 		this.game_details = game_details;
 		
-		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+		game.scale.scaleMode = Phaser.ScaleManager.RESIZE;
 
 		// Determines if mobile or desktop.
 		if (game.device.desktop) {  

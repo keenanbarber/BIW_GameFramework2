@@ -16,8 +16,6 @@ MyGame.MenuState.prototype = {
 		this.game_details_data = game_details_data;
 		this.MINIMUM_SWIPE_LENGTH = 40;
 		this.sceneProps
-
-		window.addEventListener('resize', this.onResize);
 	},
 	
 	preload: function() {
@@ -58,7 +56,7 @@ MyGame.MenuState.prototype = {
 		//console.log("Update");
 	}, 
 
-	onResize: function() {
+	resize: function(width, height) {
 		"use strict";
 		//console.log("Resized");
 		deviceOrientation = (device === "MOBILE" ? 
