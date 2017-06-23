@@ -206,18 +206,82 @@ MyGame.GameState.prototype = {
 			for(let j = 0; j < rowCount; j++) { 
 				let tileX = i * 15;
 				let tileY = j * 15;
-				let tile = game.add.sprite(tileX, tileY, "test_image");
-				tile.anchor.set(0.5);
+				let tile = this.tile(tileX, tileY, "test_image");
 				//ScaleSprite(tile, game.width, game.height, 0, 1);
 				this.tilesArray[i][j] = tile;
-				this.tileGroup.add(tile);
+				this.tileGroup.add(tile.getSprite());
 			}
 		}
 
+	},
+
+	tile: function(x, y, spriteKey) {
+		let obj = {};
+
+		obj.tag = "TYPE_1";
+
+		obj.tileButton = SpriteButton(50, 350, spriteKey);
+
+		obj.sprite = obj.tileButton.getSprite();
+		obj.sprite.x = x;
+		obj.sprite.y = y;
+		obj.sprite.anchor.set(0.5);
+
+		obj.tileButton.setBehaviors(
+			function() { //On mouse over...
+				//console.log("Over");
+			}, 
+			function() { //On mouse off...
+				//console.log("Off");
+			},
+			function() { //On mouse down...
+				//console.log("Down");
+				Tweenimate_ElasticScale(obj.sprite, 2, 2, 1000);
+			}, 
+			function() { //On mouse up...
+				//console.log("Up");
+				Tweenimate_ElasticScale(obj.sprite, 1, 1, 1000);
+			}
+		);
+
+		obj.setPosition = function(x, y) {
+			this.sprite.x = x;
+			this.sprite.y = y;
+		};
+		obj.setScale = function(x, y) {
+			this.sprite.scale.setTo(x, y);
+		};
+		obj.getSprite = function() {
+			return this.sprite;
+		};
+
+		return obj;
 	}
 
-
-
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
