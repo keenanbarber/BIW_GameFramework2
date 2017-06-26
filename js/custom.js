@@ -149,6 +149,9 @@ function Tweenimate_ElasticScale(prop, goalScaleX, goalScaleY, duration) {
 function Tweenimate_ElasticTranslate(prop, goalPosX, goalPosY, duration) {
 	let tween = game.add.tween(prop).to({ x: goalPosX, y: goalPosY }, duration, Phaser.Easing.Elastic.Out, true);
 }
+function Tweenimate_BounceTranslate(prop, goalPosX, goalPosY, duration) {
+	let tween = game.add.tween(prop).to({ x: goalPosX, y: goalPosY }, duration, Phaser.Easing.Bounce.Out, true);
+}
 function Tweenimate_Breathe(prop, maxScaleX, maxScaleY, duration) {
 	let tween = game.add.tween(prop.scale).to({ x: maxScaleX, y: maxScaleY }, duration/2, Phaser.Easing.Exponential.Out, true);
 	tween.onComplete.addOnce(function() {
@@ -158,6 +161,40 @@ function Tweenimate_Breathe(prop, maxScaleX, maxScaleY, duration) {
 function Tweenimate_SpinWobble(prop, goalAngle, duration) {
 	let tween = game.add.tween(prop).to({ angle: goalAngle }, duration, Phaser.Easing.Elastic.Out, true);
 }
+function Tweenimate_ChangeColor(prop, goalColor, duration) { // ????????????????
+	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Exponential.Out, true);
+}
+
+
+
+
+
+/*_______________________________________
+		GROUP TWEEN ON COMPLETE			|
+_________________________________________*/
+function GroupTweenManager() {
+	let obj = {};
+	obj.tweenArray = [];
+	obj.funcToCallOnComplete;
+
+	obj.callOnComplete = function(func) {
+		this.funcToCallOnComplete = func;
+	};
+	obj.addTween = function(_tween) {
+		this.tweenArray.push(_tween);
+		_tween.onComplete.addOnce(function() {
+			this.tweenArray.pop(_tween);
+			if(this.tweenArray.length == 0) {
+				this.funcToCallOnComplete();
+			}
+		}, this);
+	};
+
+	return obj;
+}
+
+
+
 
 
 /*_______________________________________
@@ -381,13 +418,13 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	game.scale.refresh();
 
 	
-	console.log("Pixel Ratio: " + currentDevicePixelRatio);
-	console.log("Screen Width: " + availableSpaceWidth + ", Screen Height: " + availableSpaceHeight);
-	console.log("(" + availableSpaceWidth + " + (" + (2*padding) + ")) / " + spriteWidth  + " = " + widthRatio);
-	console.log("(" + availableSpaceHeight + " + (" + (2*padding) + ")) / " + spriteHeight + " = " + heightRatio);
-	console.log("Scale: " + scale);
-	console.log("Sprite Width: " + sprite.width + ", with padding of: " + (availableSpaceWidth-sprite.width));
-	console.log("Sprite Height: " + sprite.height + ", with padding of: " + (availableSpaceHeight-sprite.height));
+	// console.log("Pixel Ratio: " + currentDevicePixelRatio);
+	// console.log("Screen Width: " + availableSpaceWidth + ", Screen Height: " + availableSpaceHeight);
+	// console.log("(" + availableSpaceWidth + " + (" + (2*padding) + ")) / " + spriteWidth  + " = " + widthRatio);
+	// console.log("(" + availableSpaceHeight + " + (" + (2*padding) + ")) / " + spriteHeight + " = " + heightRatio);
+	// console.log("Scale: " + scale);
+	// console.log("Sprite Width: " + sprite.width + ", with padding of: " + (availableSpaceWidth-sprite.width));
+	// console.log("Sprite Height: " + sprite.height + ", with padding of: " + (availableSpaceHeight-sprite.height));
 	
 }
 

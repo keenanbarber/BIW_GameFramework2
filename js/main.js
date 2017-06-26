@@ -10,7 +10,9 @@ var configuration = {
 	'canvas_height_max' : 2048,				
 	'canvas_height' : 650,						
 	'scale_ratio' : 1,							
-	'aspect_ratio' : 1
+	'aspect_ratio' : 1, 
+	'board_columns' : 6, 
+	'board_rows' : 6
 };
 
 
