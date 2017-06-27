@@ -161,7 +161,7 @@ function Tweenimate_Breathe(prop, maxScaleX, maxScaleY, duration) {
 function Tweenimate_SpinWobble(prop, goalAngle, duration) {
 	let tween = game.add.tween(prop).to({ angle: goalAngle }, duration, Phaser.Easing.Elastic.Out, true);
 }
-function Tweenimate_ChangeColor(prop, goalColor, duration) { // ????????????????
+function Tweenimate_TintSprite(prop, goalColor, duration) { // ????????????????
 	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Exponential.Out, true);
 }
 

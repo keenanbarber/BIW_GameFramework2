@@ -12,7 +12,8 @@ var configuration = {
 	'scale_ratio' : 1,							
 	'aspect_ratio' : 1, 
 	'board_columns' : 6, 
-	'board_rows' : 6
+	'board_rows' : 6, 
+	'tile_padding' : 2
 };
 
 

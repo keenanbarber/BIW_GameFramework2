@@ -136,7 +136,7 @@ MyGame.GameState.prototype = {
 					let tileY = j * this.calculatedTileSize;
 
 					this.tileArray[i][j].setPosition(tileX, tileY);
-					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, 2, 1);
+					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ MyGame.GameState.prototype = {
 					let tileY = j * this.calculatedTileSize;
 
 					this.tileArray[i][j].setPosition(tileX, tileY);
-					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, 2, 1);
+					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 				}
 			}
 		}
@@ -270,41 +270,46 @@ MyGame.GameState.prototype = {
 			for(let j = 0; j < configuration.board_rows; j++) { 
 				let tileX = i * this.calculatedTileSize;
 				let tileY = j * this.calculatedTileSize;
-				let tile;
-
-
-				let num = RandomBetween(0, 1);
-				switch(num) {
-					case 0: 
-						tile = this.tile(tileX, tileY, "yellow_square", "TYPE_0");
-						break;
-					case 1: 
-						tile = this.tile(tileX, tileY, "blue_square", "TYPE_1");
-						break;
-					case 2: 
-						tile = this.tile(tileX, tileY, "red_square", "TYPE_2");
-						break;
-					case 3: 
-						tile = this.tile(tileX, tileY, "green_square", "TYPE_3");
-						break;
-					case 4: 
-						tile = this.tile(tileX, tileY, "purple_square", "TYPE_4");
-						break;
-					default: 
-						tile = this.tile(tileX, tileY, "yellow_square", "TYPE_0");
-						break;
-				}
+				
+				let tile = this.placeTile(tileX, tileY);
 				
 				//ScaleSprite(tile, game.width, game.height, 0, 1);
 				this.tileArray[i][j] = tile;
 				this.tileGroup.add(tile.getSprite());
 
-				ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, 0, 1);
+				ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 
 			}
 		}
 		this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
 		this.tileGroup.y = this.verticalMargin + this.calculatedTileSize/2;
+	},
+
+	placeTile: function(x, y) {
+		
+		let tile;
+		let num = RandomBetween(0, 4);
+		switch(num) {
+			case 0: 
+				tile = this.tile(x, y, "yellow_square", "TYPE_0");
+				break;
+			case 1: 
+				tile = this.tile(x, y, "blue_square", "TYPE_1");
+				break;
+			case 2: 
+				tile = this.tile(x, y, "red_square", "TYPE_2");
+				break;
+			case 3: 
+				tile = this.tile(x, y, "green_square", "TYPE_3");
+				break;
+			case 4: 
+				tile = this.tile(x, y, "purple_square", "TYPE_4");
+				break;
+			default: 
+				tile = this.tile(x, y, "yellow_square", "TYPE_0");
+				break;
+		}
+		return tile;
 	},
 
 	tile: function(x, y, spriteKey, tileTag) {
@@ -345,6 +350,7 @@ MyGame.GameState.prototype = {
 				this.mouseDown = true;
 				this.mouseUp = false;
 				//Tweenimate_ElasticScale(obj.sprite, 1.5, 1.5, 1000);
+
 			}, 
 			function() { //On mouse up...
 				console.log("Up");
@@ -353,8 +359,7 @@ MyGame.GameState.prototype = {
 				this.mouseDown = false;
 				//Tweenimate_ElasticScale(obj.sprite, 1, 1, 1000);
 
-				Tweenimate_ElasticTranslate(mouseDownObj.getSprite(), mouseOverObj.getPositionX(), mouseOverObj.getPositionY(), 1000);
-				Tweenimate_ElasticTranslate(mouseOverObj.getSprite(), mouseDownObj.getPositionX(), mouseDownObj.getPositionY(), 1000);
+				
 
 //Tweenimate_ElasticTranslate(mouseDownObj.getSprite(), mouseUpObj.getPositionX(), mouseUpObj.getPositionY(), 1000);
 			}
@@ -372,6 +377,11 @@ MyGame.GameState.prototype = {
 
 		return obj;
 	}, 
+
+	swapTiles: function(x1, y1, x2, y2) {
+		Tweenimate_ElasticTranslate(this.tileArray[x1][y1].getSprite(), this.tileArray[x2][y2].getPositionX(), this.tileArray[x2][y2].getPositionY(), 1000);
+		Tweenimate_ElasticTranslate(this.tileArray[x2][y2].getSprite(), this.tileArray[x1][y1].getPositionX(), this.tileArray[x1][y1].getPositionY(), 1000);
+	},
 
 	scanBoard: function() {
 		let lastTileType = "";
@@ -503,10 +513,10 @@ MyGame.GameState.prototype = {
 		for(let j = 0; j < configuration.board_columns; j++) {
 			this.updateColumn(j);
 		}
+		this.refillBoard();
 
 		let obj = this;
 		this.tweenManager.callOnComplete(function() {
-			console.log("!!!");
 			console.log("All tweens completed.");
 			
 			obj.printBoard();
@@ -515,6 +525,36 @@ MyGame.GameState.prototype = {
 	}, 
 
 	refillBoard: function() {
+
+		// console.log("Refilling...");
+		for(let col = 0; col < configuration.board_columns; col++) {
+			let row = 0;
+			while(this.tileArray[col][row] == null && row < configuration.board_rows) {
+				// console.log("Found null tile...");
+				row++;
+			} let nullTileCount = row;
+			if(nullTileCount != 0) {
+				// console.log(nullTileCount + " tiles needed in column: " + col);
+				for(let i = 0; i < nullTileCount; i++) {
+
+
+					let tileX = col * this.calculatedTileSize;
+					let tileY = i * this.calculatedTileSize;
+					let tile = this.placeTile(tileX, tileY - game.height);
+
+
+					this.tileArray[col][i] = tile;
+					this.tileGroup.add(tile.getSprite());
+
+					ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+
+					let tween = game.add.tween(tile.getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
+					this.tweenManager.addTween(tween);
+
+				}
+			}
+		}
+
 
 	}, 
 
