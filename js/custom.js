@@ -176,16 +176,19 @@ function GroupTweenManager() {
 	let obj = {};
 	obj.tweenArray = [];
 	obj.funcToCallOnComplete;
+	obj.bool = false;
 
 	obj.callOnComplete = function(func) {
+		this.bool = false;
 		this.funcToCallOnComplete = func;
 	};
 	obj.addTween = function(_tween) {
 		this.tweenArray.push(_tween);
 		_tween.onComplete.addOnce(function() {
 			this.tweenArray.pop(_tween);
-			if(this.tweenArray.length == 0) {
-				this.funcToCallOnComplete();
+			if(this.tweenArray.length == 0 && this.bool == false) {
+				game.time.events.add(Phaser.Timer.SECOND * 0.2, this.funcToCallOnComplete, this);
+				this.bool = true;
 			}
 		}, this);
 	};

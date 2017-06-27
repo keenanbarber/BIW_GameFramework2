@@ -108,7 +108,7 @@ MyGame.GameState.prototype = {
 		this.initializeTiles();
 		this.positionComponents(game.width, game.height);
 		this.printBoard();
-		// this.scanBoard();
+		this.scanBoard();
 		//this.removeTile(4, 4);
 	},
 
@@ -183,7 +183,7 @@ MyGame.GameState.prototype = {
 	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    //Tweenimate_Breathe(this.thing1, 1.5, 1.5, 1200);
 
-		this.scanBoard();
+		// this.scanBoard();
 	    //this.updateBoard();
 	},
 
@@ -208,7 +208,7 @@ MyGame.GameState.prototype = {
 	    this.end_swipe_point = null;
 	    this.start_swipe_point = null;
 
-	    this.updateBoard();
+	    // this.updateBoard();
 	},
 
 	findDirectionOfSwipe: function(d) {
@@ -276,15 +276,22 @@ MyGame.GameState.prototype = {
 				let num = RandomBetween(0, 1);
 				switch(num) {
 					case 0: 
-						tile = this.tile(tileX, tileY, "test_image", "TYPE_0");
+						tile = this.tile(tileX, tileY, "yellow_square", "TYPE_0");
 						break;
 					case 1: 
-						tile = this.tile(tileX, tileY, "test_square", "TYPE_1");
+						tile = this.tile(tileX, tileY, "blue_square", "TYPE_1");
 						break;
 					case 2: 
-						tile = this.tile(tileX, tileY, "test_rect", "TYPE_2");
+						tile = this.tile(tileX, tileY, "red_square", "TYPE_2");
+						break;
+					case 3: 
+						tile = this.tile(tileX, tileY, "green_square", "TYPE_3");
+						break;
+					case 4: 
+						tile = this.tile(tileX, tileY, "purple_square", "TYPE_4");
+						break;
 					default: 
-						tile = this.tile(tileX, tileY, "test_image", "TYPE_0");
+						tile = this.tile(tileX, tileY, "yellow_square", "TYPE_0");
 						break;
 				}
 				
@@ -431,6 +438,12 @@ MyGame.GameState.prototype = {
 		for(let i = 0; i < arr.length; i++) {
 			this.removeTile(arr[i].x, arr[i].y);
 		}
+
+		let obj = this;
+		this.tweenManager.callOnComplete(function() {
+			console.log("All tweens completed.");
+			obj.updateBoard();
+		});
 	},
 
 	removeTile: function(col, row) {
@@ -439,13 +452,10 @@ MyGame.GameState.prototype = {
 
 		let tween = game.add.tween(target.scale).to({ x: 0, y: 0 }, 600, Phaser.Easing.Linear.None, true);
 
-		let obj = this;
+		
 		
 		this.tweenManager.addTween(tween);
-		this.tweenManager.callOnComplete(function() {
-			console.log("All tweens completed.");
-			// obj.updateBoard();
-		});
+		
 
 
 		tween.onComplete.addOnce(function() {
@@ -467,8 +477,6 @@ MyGame.GameState.prototype = {
 		for(let i = configuration.board_rows - 1; i > 0 ; i--) { // Starting at the bottom...
 			if(this.tileArray[col][i] == null) {
 
-
-
 				let tileX = col * this.calculatedTileSize;
 				let tileY = i * this.calculatedTileSize;
 				
@@ -479,32 +487,31 @@ MyGame.GameState.prototype = {
 						return;
 				}
 
-
 				let tween = game.add.tween(this.tileArray[col][tempI].getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
 				this.tweenManager.addTween(tween);
-
-				let obj = this;
-
-				this.tweenManager.callOnComplete(function() {
-					console.log("All tweens completed.");
-					// obj.scanBoard();
-					obj.printBoard();
-				});
-
-				//this.tileArray[col][tempI].getSprite().x = tileX;
-				//this.tileArray[col][tempI].getSprite().y = tileY;
 
 				this.tileArray[col][i] = this.tileArray[col][tempI];
 				this.tileArray[col][tempI] = null;
 
 			}
 		}
+
+
 	}, 
 
 	updateBoard: function() {
 		for(let j = 0; j < configuration.board_columns; j++) {
 			this.updateColumn(j);
 		}
+
+		let obj = this;
+		this.tweenManager.callOnComplete(function() {
+			console.log("!!!");
+			console.log("All tweens completed.");
+			
+			obj.printBoard();
+			obj.scanBoard();
+		});
 	}, 
 
 	refillBoard: function() {
@@ -524,6 +531,15 @@ MyGame.GameState.prototype = {
 				}
 				else if(this.tileArray[j][i].getTag() === "TYPE_1") {
 					str += "[1]";
+				}
+				else if(this.tileArray[j][i].getTag() === "TYPE_2") {
+					str += "[2]";
+				}
+				else if(this.tileArray[j][i].getTag() === "TYPE_3") {
+					str += "[3]";
+				}
+				else if(this.tileArray[j][i].getTag() === "TYPE_4") {
+					str += "[4]";
 				}
 			}
 			str += "\n";
