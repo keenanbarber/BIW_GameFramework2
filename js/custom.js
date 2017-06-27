@@ -192,6 +192,9 @@ function GroupTweenManager() {
 			}
 		}, this);
 	};
+	obj.getSize = function() {
+		return tweenArray.length;
+	}
 
 	return obj;
 }

@@ -12,6 +12,9 @@ var mouseOffObj;
 var mouseDownObj; 
 var mouseUpObj;
 
+var selectedTile1;
+var selectedTile2;
+
 MyGame.GameState = function(game) {
 	"use strict"; 
 };
@@ -276,6 +279,7 @@ MyGame.GameState.prototype = {
 				//ScaleSprite(tile, game.width, game.height, 0, 1);
 				this.tileArray[i][j] = tile;
 				this.tileGroup.add(tile.getSprite());
+				tile.setArrayPosition(i, j);
 
 				ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 
@@ -291,29 +295,30 @@ MyGame.GameState.prototype = {
 		let num = RandomBetween(0, 4);
 		switch(num) {
 			case 0: 
-				tile = this.tile(x, y, "yellow_square", "TYPE_0");
+				tile = this.tile(this, x, y, "yellow_square", "TYPE_0");
 				break;
 			case 1: 
-				tile = this.tile(x, y, "blue_square", "TYPE_1");
+				tile = this.tile(this, x, y, "blue_square", "TYPE_1");
 				break;
 			case 2: 
-				tile = this.tile(x, y, "red_square", "TYPE_2");
+				tile = this.tile(this, x, y, "red_square", "TYPE_2");
 				break;
 			case 3: 
-				tile = this.tile(x, y, "green_square", "TYPE_3");
+				tile = this.tile(this, x, y, "green_square", "TYPE_3");
 				break;
 			case 4: 
-				tile = this.tile(x, y, "purple_square", "TYPE_4");
+				tile = this.tile(this, x, y, "purple_square", "TYPE_4");
 				break;
 			default: 
-				tile = this.tile(x, y, "yellow_square", "TYPE_0");
+				tile = this.tile(this, x, y, "yellow_square", "TYPE_0");
 				break;
 		}
 		return tile;
 	},
 
-	tile: function(x, y, spriteKey, tileTag) {
+	tile: function(theState, x, y, spriteKey, tileTag) {
 		let obj = {};
+		obj.theState = theState;
 
 		obj.tag = tileTag;
 
@@ -323,6 +328,8 @@ MyGame.GameState.prototype = {
 		obj.sprite.x = x;
 		obj.sprite.y = y;
 		obj.sprite.anchor.set(0.5);
+
+		obj.arrayPos = new Phaser.Point(0, 0);
 
 		obj.mouseOver = false;
 		obj.mouseOff = false;
@@ -345,11 +352,25 @@ MyGame.GameState.prototype = {
 				//Tweenimate_ElasticScale(obj.sprite, 1, 1, 1000);
 			},
 			function() { //On mouse down...
-				//console.log("Down");
+				console.log("Down");
 				mouseDownObj = obj;
 				this.mouseDown = true;
 				this.mouseUp = false;
 				//Tweenimate_ElasticScale(obj.sprite, 1.5, 1.5, 1000);
+
+				if(selectedTile1 == null) {
+					selectedTile1 = obj;
+					console.log("Found: " + selectedTile1);
+				} 
+				else {
+					selectedTile2 = obj;
+					console.log("Found: " + selectedTile2);
+
+					theState.swapTiles(selectedTile1, selectedTile2);
+
+					selectedTile1 = null; 
+					selectedTile2 = null;
+				}
 
 			}, 
 			function() { //On mouse up...
@@ -369,6 +390,9 @@ MyGame.GameState.prototype = {
 			this.sprite.x = x;
 			this.sprite.y = y;
 		};
+		obj.setArrayPosition = function(x, y) {
+			this.arrayPos = new Phaser.Point(x, y);
+		};
 		obj.setScale = function(x, y) { this.sprite.scale.setTo(x, y); };
 		obj.getSprite = function() { return this.sprite; };
 		obj.getTag = function() { return this.tag; };
@@ -378,9 +402,35 @@ MyGame.GameState.prototype = {
 		return obj;
 	}, 
 
-	swapTiles: function(x1, y1, x2, y2) {
-		Tweenimate_ElasticTranslate(this.tileArray[x1][y1].getSprite(), this.tileArray[x2][y2].getPositionX(), this.tileArray[x2][y2].getPositionY(), 1000);
-		Tweenimate_ElasticTranslate(this.tileArray[x2][y2].getSprite(), this.tileArray[x1][y1].getPositionX(), this.tileArray[x1][y1].getPositionY(), 1000);
+	swapTiles: function(t1, t2) {
+		let x1 = t1.arrayPos.x;
+		let y1 = t1.arrayPos.y;
+		let x2 = t2.arrayPos.x;
+		let y2 = t2.arrayPos.y;
+
+
+		let temp = this.tileArray[x1][y1];
+		this.tileArray[x1][y1] = this.tileArray[x2][y2];
+		this.tileArray[x1][y1].setArrayPosition(x1, y1);
+
+		this.tileArray[x2][y2] = temp;
+		this.tileArray[x2][y2].setArrayPosition(x2, y2);
+
+		console.log("(" + this.tileArray[x1][y1].getPositionX() + ", " + this.tileArray[x1][y1].getPositionY() + ")");
+		console.log("(" + this.tileArray[x2][y2].getPositionX() + ", " + this.tileArray[x2][y2].getPositionY() + ")");
+	
+		let tween1 = game.add.tween(this.tileArray[x1][y1].getSprite()).to({ x: this.tileArray[x2][y2].getPositionX(), y: this.tileArray[x2][y2].getPositionY() }, 1000, Phaser.Easing.Elastic.Out, true);
+		let tween2 = game.add.tween(this.tileArray[x2][y2].getSprite()).to({ x: this.tileArray[x1][y1].getPositionX(), y: this.tileArray[x1][y1].getPositionY() }, 1000, Phaser.Easing.Elastic.Out, true);
+
+		this.tweenManager.addTween(tween1);
+		this.tweenManager.addTween(tween2);
+		
+		let obj = this;
+		this.tweenManager.callOnComplete(function() {
+			console.log("All tweens completed.");
+			obj.scanBoard();
+		});
+
 	},
 
 	scanBoard: function() {
@@ -498,6 +548,7 @@ MyGame.GameState.prototype = {
 				}
 
 				let tween = game.add.tween(this.tileArray[col][tempI].getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
+				this.tileArray[col][tempI].setArrayPosition(col, i);
 				this.tweenManager.addTween(tween);
 
 				this.tileArray[col][i] = this.tileArray[col][tempI];
@@ -549,6 +600,7 @@ MyGame.GameState.prototype = {
 					ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 
 					let tween = game.add.tween(tile.getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
+					tile.setArrayPosition(col, i);
 					this.tweenManager.addTween(tween);
 
 				}
