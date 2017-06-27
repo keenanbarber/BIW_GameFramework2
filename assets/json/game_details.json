@@ -2,6 +2,9 @@
 	 "assets": {
         "test_image": {"type": "image", "source": "assets/images/apple.png"}, 
         "test_start": {"type": "image", "source": "assets/images/start-button.png"},
+        "test_square": {"type": "image", "source": "assets/images/Test_Square.png"},
+        "test_rect": {"type": "image", "source": "assets/images/Test_Rect.png"},
+        "test_bar": {"type": "image", "source": "assets/images/Test_Bar.png"},
         "test_spritesheet": {"type": "spritesheet", "source": "assets/images/Robot_Walking.png", "frame_width": 32, "frame_height": 32, "frame_count": 8},
         "test_beep" : {"type": "audio", "source": "assets/audio/Beep1.wav"}
     },
