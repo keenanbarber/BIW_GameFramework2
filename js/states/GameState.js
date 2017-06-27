@@ -85,11 +85,13 @@ MyGame.GameState.prototype = {
 
 			for(let i = 0; i < configuration.board_columns; i++) {
 				for(let j = 0; j < configuration.board_rows; j++) { 
-					let tileX = i * this.calculatedTileSize;
-					let tileY = j * this.calculatedTileSize;
+					if(this.tileArray[i][j] != null) {
+						let tileX = i * this.calculatedTileSize;
+						let tileY = j * this.calculatedTileSize;
 
-					this.tileArray[i][j].setPosition(tileX, tileY);
-					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+						this.tileArray[i][j].setPosition(tileX, tileY);
+						ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+					}
 				}
 			}
 		}
@@ -106,11 +108,13 @@ MyGame.GameState.prototype = {
 
 			for(let i = 0; i < configuration.board_columns; i++) {
 				for(let j = 0; j < configuration.board_rows; j++) { 
-					let tileX = i * this.calculatedTileSize;
-					let tileY = j * this.calculatedTileSize;
+					if(this.tileArray[i][j] != null) {
+						let tileX = i * this.calculatedTileSize;
+						let tileY = j * this.calculatedTileSize;
 
-					this.tileArray[i][j].setPosition(tileX, tileY);
-					ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+						this.tileArray[i][j].setPosition(tileX, tileY);
+						ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+					}
 				}
 			}
 		}
@@ -122,7 +126,6 @@ MyGame.GameState.prototype = {
 		//console.log("Resized");
 
 		this.positionComponents(width, height);
-
 		game.scale.refresh();
 	},
 
