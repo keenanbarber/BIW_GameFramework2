@@ -12,8 +12,11 @@ var mouseOffObj;
 var mouseDownObj; 
 var mouseUpObj;
 
+var tweenManager;
 var selectedTile1;
 var selectedTile2;
+var score = 0; 
+var scoreMultiplier = 1;
 
 MyGame.GameState = function(game) {
 	"use strict"; 
@@ -26,6 +29,7 @@ MyGame.GameState.prototype = {
 		"use strict";
 		this.game_details_data = game_details_data;
 		this.MINIMUM_SWIPE_LENGTH = 40;
+		tweenManager = GroupTweenManager();
 
 		physics = Physics();
 
@@ -42,77 +46,23 @@ MyGame.GameState.prototype = {
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
 
-
-
 		this.sceneProps = game.add.group();
-
 		// this.thing1 = game.add.sprite(150, 150, 'test_image');
 		// this.thing1.anchor.setTo(0.5);
-		// this.thing2 = game.add.sprite(250, 250, 'test_image');
-		// this.thing2.anchor.setTo(0.5);
-		// this.thing3 = game.add.sprite(350, 350, 'test_image');
-		// this.thing3.anchor.setTo(0.5);
-
 		// this.sceneProps.add(this.thing1);
-		// this.sceneProps.add(this.thing2);
-		// this.sceneProps.add(this.thing3);
 
-		// this.square1 = game.add.sprite(150, 150, 'test_square');
-		// this.square1.anchor.setTo(0.5);
-		// ScaleSprite(this.square1, game.width/2, game.height/3, 40, 1);
-
-		
-		// let testButton = SpriteButton(50, 350, 'test_image');
-		// testButton.setBehaviors(
-		// 	function() { //On mouse over...
-		// 		console.log("Over");
-		// 		Tweenimate_ElasticScale(testButton.getSprite(), 2, 2, 1000);
-		// 	}, 
-		// 	function() { //On mouse off...
-		// 		console.log("Off");
-		// 		Tweenimate_ElasticScale(testButton.getSprite(), 1, 1, 1000);
-		// 	},
-		// 	function() { //On mouse down...
-		// 		console.log("Down");
-		// 		Tweenimate_ElasticScale(testButton.getSprite(), 4, 4, 1000);
-		// 	}, 
-		// 	function() { //On mouse up...
-		// 		console.log("Up");
-		// 		Tweenimate_ElasticScale(testButton.getSprite(), 4, 4, 1000);
-		// 	}
-		// );
-
-		
 		this.start_button1 = game.add.button(this.world.centerX, this.world.centerY, "test_image", test, this);
 		this.start_button1.anchor.setTo(0.5);
 		this.start_button1.clicked = false;
-		
+	
 
-		this.tweenManager = GroupTweenManager();
-
-
-		//let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
-		//let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
-		//spriteThing.animations.play('walk', 12, true);
-		
-
-
-
-		text_test = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
-		text_test.setPartialColor(1, 2, "orange");
-
-		// physics.applyPhysicsTo(thing1);
-		// physics.setGravity(thing1, 0, 500);
-		// physics.collideWorldBounds(thing1, true);
-		// physics.setBounce(thing1, 0.8);
 
 		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 
 		this.initializeTiles();
 		this.positionComponents(game.width, game.height);
-		this.printBoard();
+		// this.printBoard();
 		this.scanBoard();
-		//this.removeTile(4, 4);
 	},
 
 	update: function() {
@@ -176,8 +126,6 @@ MyGame.GameState.prototype = {
 		game.scale.refresh();
 	},
 
-	
-
 	start_swipe: function(pointer) {
 		"use strict";
 	    //console.log("Press down.");
@@ -185,9 +133,6 @@ MyGame.GameState.prototype = {
 	    //this.game.state.start("GameState", false, false, this.game_details_data, this);
 	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    //Tweenimate_Breathe(this.thing1, 1.5, 1.5, 1200);
-
-		// this.scanBoard();
-	    //this.updateBoard();
 	},
 
 	end_swipe: function(pointer) {
@@ -210,13 +155,9 @@ MyGame.GameState.prototype = {
 
 	    this.end_swipe_point = null;
 	    this.start_swipe_point = null;
-
-	    // this.updateBoard();
 	},
 
 	findDirectionOfSwipe: function(d) {
-		/* Could be made more efficient, but it works for now. */
-
 		let bestVector = null;
 		let bestDist = 0;
 		let currentVector = null;
@@ -262,8 +203,6 @@ MyGame.GameState.prototype = {
 		this.horizontalMargin = (game.width - (6 * this.calculatedTileSize)) / 2;
 		this.verticalMargin = (game.height - (6 * this.calculatedTileSize)) / 2;
 		
-		//console.log("WIDTH: " + game.width + ", MARGIN: " + this.horizontalMargin + ", BOARDSPACE: " + (6 * this.calculatedTileSize));
-
 		this.tileArray = [];
 		this.tileGroup = game.add.group();
 		
@@ -276,13 +215,11 @@ MyGame.GameState.prototype = {
 				
 				let tile = this.placeTile(tileX, tileY);
 				
-				//ScaleSprite(tile, game.width, game.height, 0, 1);
 				this.tileArray[i][j] = tile;
 				this.tileGroup.add(tile.getSprite());
 				tile.setArrayPosition(i, j);
 
 				ScaleSprite(tile.getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
-
 			}
 		}
 		this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
@@ -342,47 +279,50 @@ MyGame.GameState.prototype = {
 				mouseOverObj = obj;
 				this.mouseOver = true;
 				this.mouseOff = false;
-				//Tweenimate_ElasticScale(obj.sprite, 1.5, 1.5, 1000);
 			}, 
 			function() { //On mouse off...
 				//console.log("Off");
 				mouseOffObj = obj;
 				this.mouseOff = true;
 				this.mouseOver = false;
-				//Tweenimate_ElasticScale(obj.sprite, 1, 1, 1000);
 			},
 			function() { //On mouse down...
-				console.log("Down");
-				mouseDownObj = obj;
-				this.mouseDown = true;
-				this.mouseUp = false;
-				//Tweenimate_ElasticScale(obj.sprite, 1.5, 1.5, 1000);
+				if(tweenManager.getSize() == 0) {
+					// console.log("Down");
+					mouseDownObj = obj;
+					this.mouseDown = true;
+					this.mouseUp = false;
 
-				if(selectedTile1 == null) {
-					selectedTile1 = obj;
-					console.log("Found: " + selectedTile1);
-				} 
-				else {
-					selectedTile2 = obj;
-					console.log("Found: " + selectedTile2);
+					if(selectedTile1 == null) { // If there is no selected tile, save this in selectedTile1.
+						selectedTile1 = obj;
+					} 
+					else {	// If selectedTile1 is full, save in selectedTile2 and...
+						selectedTile2 = obj;
+						if(selectedTile1 == selectedTile2) { // If the two selected tiles are the same, reset.
+							selectedTile1 = null; 
+							selectedTile2 = null;
+							return;
+						}
 
-					theState.swapTiles(selectedTile1, selectedTile2);
-
-					selectedTile1 = null; 
-					selectedTile2 = null;
+						let differenceInX = Math.abs(selectedTile1.getArrayPosition().x - selectedTile2.getArrayPosition().x);
+						let differenceInY = Math.abs(selectedTile1.getArrayPosition().y - selectedTile2.getArrayPosition().y);
+						let sum = differenceInX + differenceInY;
+						if(sum == 1) { // If the two tiles are right next to eachother, swap and reset. 
+							theState.swapTiles(selectedTile1, selectedTile2);
+							selectedTile1 = null; 
+							selectedTile2 = null;
+						}
+						else { // If the two tiles are not right next to eachother, don't save the second selection.
+							selectedTile2 = null;
+						}
+					}
 				}
-
 			}, 
 			function() { //On mouse up...
 				console.log("Up");
 				mouseUpObj = obj;
 				this.mouseUp = true;
 				this.mouseDown = false;
-				//Tweenimate_ElasticScale(obj.sprite, 1, 1, 1000);
-
-				
-
-//Tweenimate_ElasticTranslate(mouseDownObj.getSprite(), mouseUpObj.getPositionX(), mouseUpObj.getPositionY(), 1000);
 			}
 		);
 
@@ -393,6 +333,9 @@ MyGame.GameState.prototype = {
 		obj.setArrayPosition = function(x, y) {
 			this.arrayPos = new Phaser.Point(x, y);
 		};
+		obj.getArrayPosition = function(x, y) {
+			return this.arrayPos;
+		};
 		obj.setScale = function(x, y) { this.sprite.scale.setTo(x, y); };
 		obj.getSprite = function() { return this.sprite; };
 		obj.getTag = function() { return this.tag; };
@@ -402,43 +345,54 @@ MyGame.GameState.prototype = {
 		return obj;
 	}, 
 
+	/*_______________________________________
+		Swap Tiles 							|
+	_________________________________________
+			The function swaps two given tiles 
+			by switching their array positions 
+			and their physical positions.
+	________________________________________*/
 	swapTiles: function(t1, t2) {
 		let x1 = t1.arrayPos.x;
 		let y1 = t1.arrayPos.y;
 		let x2 = t2.arrayPos.x;
 		let y2 = t2.arrayPos.y;
 
-
 		let temp = this.tileArray[x1][y1];
 		this.tileArray[x1][y1] = this.tileArray[x2][y2];
 		this.tileArray[x1][y1].setArrayPosition(x1, y1);
-
 		this.tileArray[x2][y2] = temp;
 		this.tileArray[x2][y2].setArrayPosition(x2, y2);
-
-		console.log("(" + this.tileArray[x1][y1].getPositionX() + ", " + this.tileArray[x1][y1].getPositionY() + ")");
-		console.log("(" + this.tileArray[x2][y2].getPositionX() + ", " + this.tileArray[x2][y2].getPositionY() + ")");
 	
-		let tween1 = game.add.tween(this.tileArray[x1][y1].getSprite()).to({ x: this.tileArray[x2][y2].getPositionX(), y: this.tileArray[x2][y2].getPositionY() }, 1000, Phaser.Easing.Elastic.Out, true);
-		let tween2 = game.add.tween(this.tileArray[x2][y2].getSprite()).to({ x: this.tileArray[x1][y1].getPositionX(), y: this.tileArray[x1][y1].getPositionY() }, 1000, Phaser.Easing.Elastic.Out, true);
-
-		this.tweenManager.addTween(tween1);
-		this.tweenManager.addTween(tween2);
+		let tween1 = game.add.tween(this.tileArray[x1][y1].getSprite()).to({ x: this.tileArray[x2][y2].getPositionX(), y: this.tileArray[x2][y2].getPositionY() }, 600, Phaser.Easing.Elastic.Out, true);
+		let tween2 = game.add.tween(this.tileArray[x2][y2].getSprite()).to({ x: this.tileArray[x1][y1].getPositionX(), y: this.tileArray[x1][y1].getPositionY() }, 600, Phaser.Easing.Elastic.Out, true);
+		tweenManager.addTween(tween1);
+		tweenManager.addTween(tween2);
 		
 		let obj = this;
-		this.tweenManager.callOnComplete(function() {
+		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
 			console.log("All tweens completed.");
 			obj.scanBoard();
 		});
 
 	},
 
+
+	/*_______________________________________
+		Scan Board 							|
+	_________________________________________
+			The function looks through the 
+			board looking for repeated tiles 
+			to award points. Keeps track of 
+			score multiplier too.
+	________________________________________*/
 	scanBoard: function() {
 		let lastTileType = "";
 		let currentTileType = "";
-
+		let foundAnything = false;
 		let repeatedTiles = [];
 
+		// console.log("Scanning...");
 		for(let i = 0; i < configuration.board_columns; i++) { // For each column...
 			for(let j = 0; j < configuration.board_rows; j++) { // Go down the column...
 				if(this.tileArray[i][j] != null) {
@@ -447,21 +401,22 @@ MyGame.GameState.prototype = {
 
 					if(lastTileType === currentTileType) {
 						repeatedTiles.push(new Phaser.Point(i, j));
-						//console.log("Same...");
 					}
 					else {
+						if(repeatedTiles.length >= 3) {
+							this.removeTiles(repeatedTiles);
+							foundAnything = true;							
+						}
 						repeatedTiles = [new Phaser.Point(i, j)];
-					}
-					if(repeatedTiles.length >= 3) {
-						// console.log("Found 3 or more in a row! (COL : " + i + ", " + j + ")");
-						this.removeTiles(repeatedTiles);
-						//repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
-						
 					}
 				}
 				else { // If null...
 					repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 				}
+			}
+			if(repeatedTiles.length >= 3) { // Check to see if the remaining tiles in the column are worth anything...
+				this.removeTiles(repeatedTiles);	
+				foundAnything = true;							
 			}
 			repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 		}
@@ -478,65 +433,59 @@ MyGame.GameState.prototype = {
 						repeatedTiles.push(new Phaser.Point(j, i));
 					}
 					else {
+						if(repeatedTiles.length >= 3) { 
+							this.removeTiles(repeatedTiles);
+							foundAnything = true;	
+						}
 						repeatedTiles = [new Phaser.Point(j, i)];
-					}
-					if(repeatedTiles.length >= 3) {
-						// console.log("Found 3 or more in a row! (ROW : " + i + ", " + j + ")");
-						this.removeTiles(repeatedTiles);
-						//repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 					}
 				}
 				else { // If null...
 					repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 				}
 			}
+			if(repeatedTiles.length >= 3) { // Check to see if the remaining tiles in the row are worth anything...
+				this.removeTiles(repeatedTiles);	
+				foundAnything = true;							
+			}
 			repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 		}
+		scoreMultiplier = !foundAnything ? 1 : scoreMultiplier + 1;
 	}, 
 
 	removeTiles: function(arr) {
+		console.log("SCORE: " + score + " + (" + arr.length + " * " + scoreMultiplier + ") ");
+		score += (arr.length * scoreMultiplier);
+
+
 		for(let i = 0; i < arr.length; i++) {
 			this.removeTile(arr[i].x, arr[i].y);
 		}
 
 		let obj = this;
-		this.tweenManager.callOnComplete(function() {
-			console.log("All tweens completed.");
+		tweenManager.callOnComplete(function() {
+			// console.log("All tweens completed.");
 			obj.updateBoard();
 		});
 	},
 
 	removeTile: function(col, row) {
-
 		let target = this.tileArray[col][row].getSprite();
 
 		let tween = game.add.tween(target.scale).to({ x: 0, y: 0 }, 600, Phaser.Easing.Linear.None, true);
+		tweenManager.addTween(tween);
 
-		
-		
-		this.tweenManager.addTween(tween);
-		
-
-
-		tween.onComplete.addOnce(function() {
+		tween.onComplete.addOnce(function() { // Removes the tile after it has finished its tween.
 			target.destroy();
 			this.tileGroup.remove(this.tileArray[col][row]);
 			this.tileArray[col][row] = null; 
-
-
-			//this.updateColumn(col);
-
 		}, this);
-
-
-		
 	}, 
 
 	updateColumn: function(col) {
 		// Go through the column and find the null space.
 		for(let i = configuration.board_rows - 1; i > 0 ; i--) { // Starting at the bottom...
 			if(this.tileArray[col][i] == null) {
-
 				let tileX = col * this.calculatedTileSize;
 				let tileY = i * this.calculatedTileSize;
 				
@@ -546,18 +495,14 @@ MyGame.GameState.prototype = {
 					if(tempI < 0)
 						return;
 				}
-
 				let tween = game.add.tween(this.tileArray[col][tempI].getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
 				this.tileArray[col][tempI].setArrayPosition(col, i);
-				this.tweenManager.addTween(tween);
+				tweenManager.addTween(tween);
 
 				this.tileArray[col][i] = this.tileArray[col][tempI];
 				this.tileArray[col][tempI] = null;
-
 			}
 		}
-
-
 	}, 
 
 	updateBoard: function() {
@@ -567,32 +512,25 @@ MyGame.GameState.prototype = {
 		this.refillBoard();
 
 		let obj = this;
-		this.tweenManager.callOnComplete(function() {
-			console.log("All tweens completed.");
-			
-			obj.printBoard();
+		tweenManager.callOnComplete(function() {
+			// console.log("All tweens completed.");
+			// obj.printBoard();
 			obj.scanBoard();
 		});
 	}, 
 
 	refillBoard: function() {
-
 		// console.log("Refilling...");
-		for(let col = 0; col < configuration.board_columns; col++) {
+		for(let col = 0; col < configuration.board_columns; col++) { // For each column...
 			let row = 0;
-			while(this.tileArray[col][row] == null && row < configuration.board_rows) {
-				// console.log("Found null tile...");
+			while(this.tileArray[col][row] == null && row < configuration.board_rows) { // Counts null tiles.
 				row++;
-			} let nullTileCount = row;
-			if(nullTileCount != 0) {
-				// console.log(nullTileCount + " tiles needed in column: " + col);
+			} let nullTileCount = row; // Stores the resulting number.
+			if(nullTileCount != 0) { // If it found missing tiles, create a new tile and drop it in. 
 				for(let i = 0; i < nullTileCount; i++) {
-
-
 					let tileX = col * this.calculatedTileSize;
 					let tileY = i * this.calculatedTileSize;
 					let tile = this.placeTile(tileX, tileY - game.height);
-
 
 					this.tileArray[col][i] = tile;
 					this.tileGroup.add(tile.getSprite());
@@ -601,45 +539,52 @@ MyGame.GameState.prototype = {
 
 					let tween = game.add.tween(tile.getSprite()).to({ x: tileX, y: tileY }, 1000, Phaser.Easing.Bounce.Out, true);
 					tile.setArrayPosition(col, i);
-					this.tweenManager.addTween(tween);
-
+					tweenManager.addTween(tween);
 				}
 			}
 		}
-
-
 	}, 
 
+	/*_______________________________________
+		Print Board							|
+	_________________________________________
+			The function prints what the array
+			looks like in the console window. 
+	________________________________________*/
 	printBoard: function() {
 		let str = "";
-
 		for(let i = 0; i < configuration.board_rows; i++) {
 			for(let j = 0; j < configuration.board_columns; j++) { 
 				if(this.tileArray[j][i] == null) {
 					str += "[_]";
 				}
-				else if(this.tileArray[j][i].getTag() === "TYPE_0") {
-					str += "[0]";
-				}
-				else if(this.tileArray[j][i].getTag() === "TYPE_1") {
-					str += "[1]";
-				}
-				else if(this.tileArray[j][i].getTag() === "TYPE_2") {
-					str += "[2]";
-				}
-				else if(this.tileArray[j][i].getTag() === "TYPE_3") {
-					str += "[3]";
-				}
-				else if(this.tileArray[j][i].getTag() === "TYPE_4") {
-					str += "[4]";
+				else {
+					switch (this.tileArray[j][i].getTag()) {
+						case "TYPE_0": 
+							str += "[0]";
+							break;
+						case "TYPE_1": 
+							str += "[1]";
+							break;
+						case "TYPE_2": 
+							str += "[2]";
+							break;
+						case "TYPE_3": 
+							str += "[3]";
+							break;
+						case "TYPE_4": 
+							str += "[4]";
+							break;
+						default: 
+							str += "[0]";
+							break;
+					}
 				}
 			}
 			str += "\n";
 		}
-
 		console.log(str);
 	}
-
 };
 
 

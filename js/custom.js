@@ -193,7 +193,7 @@ function GroupTweenManager() {
 		}, this);
 	};
 	obj.getSize = function() {
-		return tweenArray.length;
+		return this.tweenArray.length;
 	}
 
 	return obj;
@@ -451,6 +451,51 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 	game.scale.refresh();
 	
 }
+
+
+
+
+
+
+
+
+/*_______________________________________
+	REFERENCE collide					|
+_________________________________________
+
+	FOR COLORED TEXT... 
+		text_test = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+		text_test.setPartialColor(1, 2, "orange");
+
+	FOR PHYSICS... 
+		physics.applyPhysicsTo(thing1);
+		physics.setGravity(thing1, 0, 500);
+		physics.collideWorldBounds(thing1, true);
+		physics.setBounce(thing1, 0.8);
+
+	FOR A SPRITE SHEET ANIMATION... 
+		let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
+		let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
+		spriteThing.animations.play('walk', 12, true);
+
+_________________________________________*/
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
