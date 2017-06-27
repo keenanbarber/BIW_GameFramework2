@@ -319,7 +319,7 @@ MyGame.GameState.prototype = {
 				}
 			}, 
 			function() { //On mouse up...
-				console.log("Up");
+				// console.log("Up");
 				mouseUpObj = obj;
 				this.mouseUp = true;
 				this.mouseDown = false;
@@ -371,7 +371,7 @@ MyGame.GameState.prototype = {
 		
 		let obj = this;
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
-			console.log("All tweens completed.");
+			// console.log("All tweens completed.");
 			obj.scanBoard();
 		});
 
@@ -454,9 +454,10 @@ MyGame.GameState.prototype = {
 	}, 
 
 	removeTiles: function(arr) {
-		console.log("SCORE: " + score + " + (" + arr.length + " * " + scoreMultiplier + ") ");
+		let str = ("SCORE: " + score + " + (" + arr.length + " * " + scoreMultiplier + ") = ");
 		score += (arr.length * scoreMultiplier);
-
+		str += score;
+		console.log(str);
 
 		for(let i = 0; i < arr.length; i++) {
 			this.removeTile(arr[i].x, arr[i].y);
