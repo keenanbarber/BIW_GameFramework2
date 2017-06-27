@@ -162,7 +162,7 @@ function Tweenimate_SpinWobble(prop, goalAngle, duration) {
 	let tween = game.add.tween(prop).to({ angle: goalAngle }, duration, Phaser.Easing.Elastic.Out, true);
 }
 function Tweenimate_TintSprite(prop, goalColor, duration) { // ????????????????
-	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Exponential.Out, true);
+	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Linear.None, true);
 }
 
 
@@ -455,6 +455,40 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 
 
 
+function checkCookie() {
+    var username = getCookie("username");
+    if (username != "") {
+        alert("Welcome again " + username + ". ");
+    } else {
+        if (username == "" || username == null) {
+            setCookie("username", "Keenan", 365);
+			console.log("Setting: username");
+        }
+    }
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
 
 

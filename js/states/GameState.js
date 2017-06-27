@@ -63,6 +63,9 @@ MyGame.GameState.prototype = {
 		this.positionComponents(game.width, game.height);
 		// this.printBoard();
 		this.scanBoard();
+
+
+		checkCookie();
 	},
 
 	update: function() {
