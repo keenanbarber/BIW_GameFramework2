@@ -309,8 +309,6 @@ MyGame.GameState.prototype = {
 						let sum = differenceInX + differenceInY;
 						if(sum == 1) { // If the two tiles are right next to eachother, swap and reset. 
 							theState.swapTiles(selectedTile1, selectedTile2);
-							selectedTile1 = null; 
-							selectedTile2 = null;
 						}
 						else { // If the two tiles are not right next to eachother, don't save the second selection.
 							selectedTile2 = null;
@@ -450,7 +448,20 @@ MyGame.GameState.prototype = {
 			}
 			repeatedTiles = []; lastTileType = ""; currentTileType = ""; // Reset
 		}
-		scoreMultiplier = !foundAnything ? 1 : scoreMultiplier + 1;
+
+		if(!foundAnything) {
+			if(scoreMultiplier == 1 && selectedTile1 != null && selectedTile2 != null) {
+				this.swapTiles(selectedTile1, selectedTile2);
+			}
+			selectedTile1 = null; 
+			selectedTile2 = null;
+			scoreMultiplier = 1;
+			console.log("--- Multiplier Reset ---");
+		}
+		else {
+			scoreMultiplier += 1;
+		}
+		
 	}, 
 
 	removeTiles: function(arr) {
