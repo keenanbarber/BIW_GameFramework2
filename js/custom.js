@@ -458,11 +458,11 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 function checkCookie() {
     var username = getCookie("username");
     if (username != "") {
-        alert("Welcome again " + username + ". ");
+        alert("Welcome again " + username + " ");
     } else {
+    	user = prompt("Please enter your name:", "");
         if (username == "" || username == null) {
             setCookie("username", "Keenan", 365);
-			console.log("Setting: username");
         }
     }
 }
@@ -490,11 +490,14 @@ function getCookie(cname) {
     return "";
 }
 
+var deleteCookie = function(cname) {
+    setCookie(cname, "", -1);
+}
 
 
 
 /*_______________________________________
-	REFERENCE collide					|
+	REFERENCE CODE						|
 _________________________________________
 
 	FOR COLORED TEXT... 

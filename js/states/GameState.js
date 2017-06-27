@@ -65,7 +65,7 @@ MyGame.GameState.prototype = {
 		this.scanBoard();
 
 
-		checkCookie();
+		checkCookie(); // TEST
 	},
 
 	update: function() {
