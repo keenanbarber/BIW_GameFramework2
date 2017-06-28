@@ -126,12 +126,14 @@ function TweenProps(props, _tween) {
 	return tween;
 }
 function EnterNewScene(newScenesProps, _tween) {
-	TweenProps(newScenesProps, _tween);
+	let tween = TweenProps(newScenesProps, _tween);
 	//tween.onComplete.add(clearSceneProps, this);
+	tweenManager.addTween(tween);
 }
 function ExitPreviousScene(previousScenesProps, _tween) {
 	let tween = TweenProps(previousScenesProps, _tween);
 	tween.onComplete.add(function() { ClearSceneProps(previousScenesProps); }, this);
+	tweenManager.addTween(tween);
 }
 function ClearSceneProps(group) {
 	group.removeAll();
@@ -187,7 +189,7 @@ function GroupTweenManager() {
 		_tween.onComplete.addOnce(function() {
 			this.tweenArray.pop(_tween);
 			if(this.tweenArray.length == 0 && this.bool == false) {
-				game.time.events.add(Phaser.Timer.SECOND * 0.2, this.funcToCallOnComplete, this);
+				game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
 				this.bool = true;
 			}
 		}, this);
@@ -268,22 +270,60 @@ function SpriteButton(x, y, imageKey) {
 	obj.onInputOutFunc;
 	obj.onInputDownFunc;
 	obj.onInputUpFunc;
+	obj.onInputClickFunc;
 
-	
+	obj.inputOver = false;
+	obj.inputOut = false;
+	obj.inputDown = false;
+	obj.inputUp = false;
+
+
+	obj.sprite.events.onInputOver.add(function() {
+		obj.inputOver = true;
+		obj.inputOut = false;
+		if(obj.onInputOverFunc) {
+			obj.onInputOverFunc();
+		}
+	}, this);
+	obj.sprite.events.onInputOut.add(function() {
+		obj.inputOut = true;
+		obj.inputOver = false;
+		if(obj.onInputOutFunc) {
+			obj.onInputOutFunc();
+		}
+	}, this);
+	obj.sprite.events.onInputDown.add(function() {
+		obj.inputDown = true;
+		obj.inputUp = false;
+		if(obj.onInputDownFunc) {
+			obj.onInputDownFunc();
+		}
+	}, this);
+	obj.sprite.events.onInputUp.add(function() {
+		obj.inputUp = true;
+		obj.inputDown = false;
+		if(obj.onInputUpFunc) {
+			obj.onInputUpFunc();
+		}
+		if(obj.inputOver) {
+			if(obj.onInputClickFunc) {
+				obj.onInputClickFunc();
+			}
+		}
+	}, this);
 
 	obj.getSprite = function() {
 		return this.sprite;
 	};
-	obj.setBehaviors = function(onInputOverFunc, onInputOutFunc, onInputDownFunc, onInputUpFunc) {
-		this.onInputOverFunc = onInputOverFunc;
-		this.onInputOutFunc = onInputOutFunc;
-		this.onInputDownFunc = onInputDownFunc;
-		this.onInputUpFunc = onInputUpFunc;
-
-		this.sprite.events.onInputOver.add(this.onInputOverFunc, this);
-		this.sprite.events.onInputOut.add(this.onInputOutFunc, this);
-		this.sprite.events.onInputDown.add(this.onInputDownFunc, this);
-		this.sprite.events.onInputUp.add(this.onInputUpFunc, this);
+	obj.setBehaviors = function(inputOverFunc, inputOutFunc, inputDownFunc, inputUpFunc) {
+		this.onInputOverFunc = inputOverFunc;
+		this.onInputOutFunc = inputOutFunc;
+		this.onInputDownFunc = inputDownFunc;
+		this.onInputUpFunc = inputUpFunc;
+	};
+	obj.setClickBehavior = function(onInputClickFunc) {
+		// console.log(this.onInputUpFunc);
+		this.onInputClickFunc = onInputClickFunc;
 	};
 
     return obj;
@@ -434,6 +474,33 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	
 }
 
+function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
+	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
+	
+	let currentDevicePixelRatio = window.devicePixelRatio;
+
+	let textWidth = text.width;
+	let textHeight = text.height;
+
+	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (textWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (textHeight);
+	
+	let scale = Math.min(widthRatio, heightRatio);
+	
+	text.scale.setTo(scale * scaleMultiplier, scale * scaleMultiplier);
+	game.scale.refresh();
+
+	
+	// console.log("Pixel Ratio: " + currentDevicePixelRatio);
+	// console.log("Screen Width: " + availableSpaceWidth + ", Screen Height: " + availableSpaceHeight);
+	// console.log("(" + availableSpaceWidth + " + (" + (2*padding) + ")) / " + spriteWidth  + " = " + widthRatio);
+	// console.log("(" + availableSpaceHeight + " + (" + (2*padding) + ")) / " + spriteHeight + " = " + heightRatio);
+	// console.log("Scale: " + scale);
+	// console.log("Sprite Width: " + sprite.width + ", with padding of: " + (availableSpaceWidth-sprite.width));
+	// console.log("Sprite Height: " + sprite.height + ", with padding of: " + (availableSpaceHeight-sprite.height));
+	
+}
+
 function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
 	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
 	
@@ -493,7 +560,7 @@ function getCookie(cname) {
 var deleteCookie = function(cname) {
     setCookie(cname, "", -1);
 }
-
+ 
 
 
 /*_______________________________________

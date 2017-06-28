@@ -2,7 +2,7 @@
 
 var MyGame = MyGame || {}; // Creates namespace if haven't already. 
 
-var text_test;
+
 var transitionRect;
 var t;
 var physics;
@@ -12,7 +12,7 @@ var mouseOffObj;
 var mouseDownObj; 
 var mouseUpObj;
 
-var tweenManager;
+
 var selectedTile1;
 var selectedTile2;
 var score = 0; 
@@ -29,7 +29,7 @@ MyGame.GameState.prototype = {
 		"use strict";
 		this.game_details_data = game_details_data;
 		this.MINIMUM_SWIPE_LENGTH = 40;
-		tweenManager = GroupTweenManager();
+		
 
 		physics = Physics();
 
@@ -51,10 +51,32 @@ MyGame.GameState.prototype = {
 		// this.thing1.anchor.setTo(0.5);
 		// this.sceneProps.add(this.thing1);
 
-		this.start_button1 = game.add.button(this.world.centerX, this.world.centerY, "test_image", test, this);
-		this.start_button1.anchor.setTo(0.5);
-		this.start_button1.clicked = false;
-	
+		// this.exit_button = game.add.sprite(this.world.centerX, this.world.centerY, "blue_square");
+		// this.exit_button.anchor.setTo(0.5);	
+
+		this.button = SpriteButton(100, 100, 'red_square');
+		this.button.setBehaviors(
+			function() { //On mouse over...
+				// console.log("Over");
+			}, 
+			function() { //On mouse off...
+				// console.log("Off");
+			},
+			function() { //On mouse down...
+				// console.log("Down");
+				this.getSprite().loadTexture('blue_square');
+				// Tweenimate_ElasticScale(this.getSprite(), 0.8, 0.8, 1000);
+			}, 
+			function() { //On mouse up...
+				// console.log("Up");
+				this.getSprite().loadTexture('red_square');
+				// Tweenimate_ElasticScale(this.getSprite(), 1, 1, 1000);
+			}
+		);
+		this.button.setClickBehavior(function() {
+			console.log("CLICK");
+		});
+		this.sceneProps.add(this.button.getSprite());
 
 
 		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
@@ -62,10 +84,17 @@ MyGame.GameState.prototype = {
 		this.initializeTiles();
 		this.positionComponents(game.width, game.height);
 		// this.printBoard();
-		this.scanBoard();
+
+		let obj = this;
+		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
+			// console.log("Transition completed.");
+			obj.scanBoard();
+		});
+		
 
 
-		checkCookie(); // TEST
+		// checkCookie(); // TEST
+		// this.addText();
 	},
 
 	update: function() {
@@ -76,13 +105,14 @@ MyGame.GameState.prototype = {
 	positionComponents: function(width, height) {
 		let isLandscape = (game.height / game.width < 1.3) ? true : false;
 		if(isLandscape) {
-			var availableGridSpace = Math.min(width * 2 / 3, height);
-			this.calculatedTileSize = (availableGridSpace * 0.9) / 6;
-			this.verticalMargin = (height - 6 * this.calculatedTileSize) / 2;
-			this.horizontalMargin = (width * 2 / 3 - 6 * this.calculatedTileSize) / 2;
+			var availableGridSpace = Math.min(width * 2/3, height);
+			let chosenSideLength = Math.max(configuration.board_columns, configuration.board_rows);
+			this.calculatedTileSize = (availableGridSpace * 0.9) / chosenSideLength;
+			this.horizontalMargin = (width * 2/3 - configuration.board_columns * this.calculatedTileSize) / 2;
+			this.verticalMargin = (height - configuration.board_rows * this.calculatedTileSize) / 2;
 
 
-			this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
+			this.tileGroup.x = (width * 1/3) + this.horizontalMargin + this.calculatedTileSize/2;
 			this.tileGroup.y = this.verticalMargin + this.calculatedTileSize/2;
 
 
@@ -97,12 +127,17 @@ MyGame.GameState.prototype = {
 					}
 				}
 			}
+
+			ScaleSprite(this.button.getSprite(), width/3, height/3, 20, 1);
+			this.button.getSprite().x = width/6;
+			this.button.getSprite().y = this.verticalMargin + this.button.getSprite().height / 2;
 		}
 		else {
-			var availableGridSpace = game.width;
-			this.calculatedTileSize = (availableGridSpace * 0.8) / 6;
-			this.horizontalMargin = (game.width - (6 * this.calculatedTileSize)) / 2;
-			this.verticalMargin = (game.height - (6 * this.calculatedTileSize)) / 2;
+			var availableGridSpace = width;
+			let chosenSideLength = Math.max(configuration.board_columns, configuration.board_rows);
+			this.calculatedTileSize = (availableGridSpace * 0.8) / chosenSideLength;
+			this.horizontalMargin = (width - (configuration.board_columns * this.calculatedTileSize)) / 2;
+			this.verticalMargin = (height - (configuration.board_rows * this.calculatedTileSize)) / 2;
 
 
 			this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
@@ -120,6 +155,10 @@ MyGame.GameState.prototype = {
 					}
 				}
 			}
+
+			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 20, 1);
+			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;
+			this.button.getSprite().y = height - this.verticalMargin/2;
 		}
 	},
 
@@ -235,7 +274,7 @@ MyGame.GameState.prototype = {
 	placeTile: function(x, y) {
 		
 		let tile;
-		let num = RandomBetween(0, 4);
+		let num = RandomBetween(0, configuration.number_of_tiles-1);
 		switch(num) {
 			case 0: 
 				tile = this.tile(this, x, y, "yellow_square", "TYPE_0");
@@ -407,7 +446,7 @@ MyGame.GameState.prototype = {
 						repeatedTiles.push(new Phaser.Point(i, j));
 					}
 					else {
-						if(repeatedTiles.length >= 3) {
+						if(repeatedTiles.length >= configuration.min_required_tiles_for_points) {
 							this.removeTiles(repeatedTiles);
 							foundAnything = true;							
 						}
@@ -437,7 +476,7 @@ MyGame.GameState.prototype = {
 						repeatedTiles.push(new Phaser.Point(j, i));
 					}
 					else {
-						if(repeatedTiles.length >= 3) { 
+						if(repeatedTiles.length >= configuration.min_required_tiles_for_points) { 
 							this.removeTiles(repeatedTiles);
 							foundAnything = true;	
 						}
