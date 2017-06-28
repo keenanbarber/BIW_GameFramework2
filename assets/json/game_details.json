@@ -2,7 +2,11 @@
 	 "assets": {
         "test_image": {"type": "image", "source": "assets/images/apple.png"}, 
         "test_start": {"type": "image", "source": "assets/images/start-button.png"},
-        "test_square": {"type": "image", "source": "assets/images/Test_Square.png"},
+        "yellow_square": {"type": "image", "source": "assets/images/square_yellow.png"},
+        "green_square": {"type": "image", "source": "assets/images/square_green.png"},
+        "red_square": {"type": "image", "source": "assets/images/square_red.png"},
+        "blue_square": {"type": "image", "source": "assets/images/square_blue.png"},
+        "purple_square": {"type": "image", "source": "assets/images/square_purple.png"},
         "test_rect": {"type": "image", "source": "assets/images/Test_Rect.png"},
         "test_bar": {"type": "image", "source": "assets/images/Test_Bar.png"},
         "test_spritesheet": {"type": "spritesheet", "source": "assets/images/Robot_Walking.png", "frame_width": 32, "frame_height": 32, "frame_count": 8},

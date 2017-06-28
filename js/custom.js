@@ -161,8 +161,8 @@ function Tweenimate_Breathe(prop, maxScaleX, maxScaleY, duration) {
 function Tweenimate_SpinWobble(prop, goalAngle, duration) {
 	let tween = game.add.tween(prop).to({ angle: goalAngle }, duration, Phaser.Easing.Elastic.Out, true);
 }
-function Tweenimate_ChangeColor(prop, goalColor, duration) { // ????????????????
-	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Exponential.Out, true);
+function Tweenimate_TintSprite(prop, goalColor, duration) { // ????????????????
+	let tween = game.add.tween(prop).to({ tint: goalColor }, duration, Phaser.Easing.Linear.None, true);
 }
 
 
@@ -176,19 +176,25 @@ function GroupTweenManager() {
 	let obj = {};
 	obj.tweenArray = [];
 	obj.funcToCallOnComplete;
+	obj.bool = false;
 
 	obj.callOnComplete = function(func) {
+		this.bool = false;
 		this.funcToCallOnComplete = func;
 	};
 	obj.addTween = function(_tween) {
 		this.tweenArray.push(_tween);
 		_tween.onComplete.addOnce(function() {
 			this.tweenArray.pop(_tween);
-			if(this.tweenArray.length == 0) {
-				this.funcToCallOnComplete();
+			if(this.tweenArray.length == 0 && this.bool == false) {
+				game.time.events.add(Phaser.Timer.SECOND * 0.2, this.funcToCallOnComplete, this);
+				this.bool = true;
 			}
 		}, this);
 	};
+	obj.getSize = function() {
+		return this.tweenArray.length;
+	}
 
 	return obj;
 }
@@ -445,6 +451,88 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 	game.scale.refresh();
 	
 }
+
+
+
+
+function checkCookie() {
+    var username = getCookie("username");
+    if (username != "") {
+        alert("Welcome again " + username + " ");
+    } else {
+    	user = prompt("Please enter your name:", "");
+        if (username == "" || username == null) {
+            setCookie("username", "Keenan", 365);
+        }
+    }
+}
+
+function setCookie(cname, cvalue, exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires="+ d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for(var i = 0; i <ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+var deleteCookie = function(cname) {
+    setCookie(cname, "", -1);
+}
+
+
+
+/*_______________________________________
+	REFERENCE CODE						|
+_________________________________________
+
+	FOR COLORED TEXT... 
+		text_test = Text("Testing ", { font: "15px Arial", fill: 'white', align: "center" });
+		text_test.setPartialColor(1, 2, "orange");
+
+	FOR PHYSICS... 
+		physics.applyPhysicsTo(thing1);
+		physics.setGravity(thing1, 0, 500);
+		physics.collideWorldBounds(thing1, true);
+		physics.setBounce(thing1, 0.8);
+
+	FOR A SPRITE SHEET ANIMATION... 
+		let spriteThing = game.add.sprite(500, 300, 'test_spritesheet');
+		let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
+		spriteThing.animations.play('walk', 12, true);
+
+_________________________________________*/
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

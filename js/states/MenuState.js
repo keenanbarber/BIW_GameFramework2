@@ -48,7 +48,8 @@ MyGame.MenuState.prototype = {
 		//player.setPartialColor(1, 2, "orange");
 
 
-		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+		// EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+		this.game.state.start("GameState", false, false, this.game_details_data, this);
 	},
 
 	update: function() {
@@ -69,7 +70,7 @@ MyGame.MenuState.prototype = {
 		"use strict";
 	    //console.log("Press down.");
 	    //this.exitTransition();
-	    this.game.state.start("GameState", false, false, this.game_details_data, this);
+	    
 	    //this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	},
 
