@@ -193,7 +193,6 @@ function GroupTweenManager() {
 			if(this.tweenArray.length == 0 && this.bool == false) {
 				if(this.funcToCallOnComplete) {
 					game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
-					console.log("Trigger.");
 				}
 				this.bool = true;
 			}
