@@ -79,12 +79,15 @@ MyGame.GameState.prototype = {
 		this.sceneProps.add(this.button.getSprite());
 
 
-		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
-
 		this.initializeTiles();
-		this.positionComponents(game.width, game.height);
+		
+
+		
+		
 		// this.printBoard();
 
+
+		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		let obj = this;
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
 			console.log("Transition completed.");
@@ -92,7 +95,7 @@ MyGame.GameState.prototype = {
 		});
 		
 
-
+		this.positionComponents(game.width, game.height);
 		// checkCookie(); // TEST
 		// this.addText();
 	},
@@ -275,6 +278,8 @@ MyGame.GameState.prototype = {
 		}
 		this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
 		this.tileGroup.y = this.verticalMargin + this.calculatedTileSize/2;
+
+		this.sceneProps.add(this.tileGroup);
 	},
 
 	placeTile: function(x, y) {

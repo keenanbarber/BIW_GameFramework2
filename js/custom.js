@@ -497,11 +497,10 @@ function GetScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, paddi
 }
 
 function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
-	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
-	
-	console.log("Available Width: " + availableSpaceWidth);
-
 	let currentDevicePixelRatio = window.devicePixelRatio;
+	let maxWidth = 200 * currentDevicePixelRatio;
+
+	
 
 	let textWidth = text.width;
 	let textHeight = text.height;
@@ -510,7 +509,8 @@ function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, sca
 	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (textHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
-	
+
+
 	text.scale.setTo((text.width * scale) / (text.width / text.scale.x), (text.width * scale) / (text.width / text.scale.x));
 	game.scale.refresh();
 
