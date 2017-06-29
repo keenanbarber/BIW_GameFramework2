@@ -13,13 +13,15 @@ MyGame.MenuState = function() {
 };
 
 MyGame.MenuState.prototype = {
-	init: function(game_details_data) {
+	init: function(game_details_data, previousState) {
 		"use strict";
 		this.game_details_data = game_details_data;
 		this.MINIMUM_SWIPE_LENGTH = 40;
 		this.sceneProps
 
 		UpdateScreenInfo();
+		if(previousState)
+			ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
 	},
 	
 	preload: function() {
@@ -44,7 +46,7 @@ MyGame.MenuState.prototype = {
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
 
-
+		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		this.positionComponents(game.width, game.height);
 	},
 
@@ -105,7 +107,7 @@ MyGame.MenuState.prototype = {
 	    //console.log("Press down.");
 	    //this.exitTransition();
 	    
-	    //this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
+	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    // this.game.state.start("GameState", false, false, this.game_details_data, this);
 	},
 
@@ -120,7 +122,7 @@ MyGame.MenuState.prototype = {
 
 		    //console.log(swipe_length);
 		    // if the swipe length is greater than the minimum, a swipe is detected
-		    if (swipe_length >= this.MINIMUM_SWIPE_LENGTH) {
+		    if (swipe_length >= configuration.min_swipe_length) {
 		        let calculatedSwipeDirectionVector = new Phaser.Point(this.end_swipe_point.x - this.start_swipe_point.x, this.end_swipe_point.y - this.start_swipe_point.y).normalize();
 			    
 			    this.findDirectionOfSwipe(calculatedSwipeDirectionVector);

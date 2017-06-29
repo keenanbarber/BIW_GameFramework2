@@ -133,6 +133,7 @@ function EnterNewScene(newScenesProps, _tween) {
 function ExitPreviousScene(previousScenesProps, _tween) {
 	let tween = TweenProps(previousScenesProps, _tween);
 	tween.onComplete.add(function() { ClearSceneProps(previousScenesProps); }, this);
+	tweenManager.clearTweenArray();
 	tweenManager.addTween(tween);
 }
 function ClearSceneProps(group) {
@@ -188,18 +189,21 @@ function GroupTweenManager() {
 		this.tweenArray.push(_tween);
 		_tween.onComplete.addOnce(function() {
 			this.tweenArray.pop(_tween);
+			// console.log(this.tweenArray.length + " tweens remaining.")
 			if(this.tweenArray.length == 0 && this.bool == false) {
-				game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
+				if(this.funcToCallOnComplete) {
+					game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
+					console.log("Trigger.");
+				}
 				this.bool = true;
 			}
 		}, this);
 	};
-	obj.stopAllTweens = function() {
-		for(let i = 0; i < this.tweenArray.length; i++) {
-			this.tweenArray[i].stop(true);
-		}
-		game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
-		this.bool = true;	
+	obj.clearTweenArray = function() {
+		// for(let i = 0; i < this.tweenArray.length; i++) {
+		// 	this.tweenArray[i].stop(true);
+		// }
+		this.tweenArray = [];
 	};
 	obj.getSize = function() {
 		return this.tweenArray.length;

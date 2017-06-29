@@ -33,7 +33,7 @@ MyGame.GameState.prototype = {
 
 		physics = Physics();
 
-		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
+		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_LEFT", 1000, Phaser.Easing.Bounce.Out));
 	},
 
 	preload: function() {
@@ -42,6 +42,7 @@ MyGame.GameState.prototype = {
 
 	create: function() {
 		"use strict"; 
+		let obj = this;
 		// Add events to check for swipe
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
@@ -53,7 +54,7 @@ MyGame.GameState.prototype = {
 
 		// this.exit_button = game.add.sprite(this.world.centerX, this.world.centerY, "blue_square");
 		// this.exit_button.anchor.setTo(0.5);	
-
+		
 		this.button = SpriteButton(100, 100, 'red_square');
 		this.button.setBehaviors(
 			function() { //On mouse over...
@@ -75,6 +76,7 @@ MyGame.GameState.prototype = {
 		);
 		this.button.setClickBehavior(function() {
 			console.log("CLICK");
+			obj.game.state.start("MenuState", false, false, this.game_details_data, obj);
 		});
 		this.sceneProps.add(this.button.getSprite());
 
@@ -87,8 +89,7 @@ MyGame.GameState.prototype = {
 		// this.printBoard();
 
 
-		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
-		let obj = this;
+		EnterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
 			console.log("Transition completed.");
 			obj.scanBoard();
@@ -200,7 +201,7 @@ MyGame.GameState.prototype = {
 
 		    //console.log(swipe_length);
 		    // if the swipe length is greater than the minimum, a swipe is detected
-		    if (swipe_length >= configuration.min_sqipe_length) {
+		    if (swipe_length >= configuration.min_swipe_length) {
 		        let calculatedSwipeDirectionVector = new Phaser.Point(this.end_swipe_point.x - this.start_swipe_point.x, this.end_swipe_point.y - this.start_swipe_point.y).normalize();
 			    
 			    this.findDirectionOfSwipe(calculatedSwipeDirectionVector);
