@@ -160,7 +160,7 @@ MyGame.GameState.prototype = {
 				}
 			}
 
-			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 20, 1);
+			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 10, 1);
 			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;
 			this.button.getSprite().y = height - this.verticalMargin/2;
 		}
@@ -343,7 +343,7 @@ MyGame.GameState.prototype = {
 				this.mouseOver = false;
 			},
 			function() { //On mouse down...
-				if(tweenManager.getSize() == 0) {
+				if(tweenManager.getSize() == 0 && (selectedTile1 == null || selectedTile2 == null)) {
 					// console.log("Down");
 					mouseDownObj = obj;
 					this.mouseDown = true;
