@@ -463,8 +463,8 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	let spriteWidth = sprite._frame.width;
 	let spriteHeight = sprite._frame.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
 	
@@ -482,21 +482,38 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	
 }
 
+function GetScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
+	let currentDevicePixelRatio = window.devicePixelRatio;
+
+	let spriteWidth = sprite._frame.width;
+	let spriteHeight = sprite._frame.height;
+
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
+	
+	let scale = Math.min(widthRatio, heightRatio);
+	
+	return scale;
+}
+
 function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
 	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
 	
+	console.log("Available Width: " + availableSpaceWidth);
+
 	let currentDevicePixelRatio = window.devicePixelRatio;
 
 	let textWidth = text.width;
 	let textHeight = text.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (textWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (textHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (textWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (textHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
 	
-	text.scale.setTo(scale * scaleMultiplier, scale * scaleMultiplier);
+	text.scale.setTo((text.width * scale) / (text.width / text.scale.x), (text.width * scale) / (text.width / text.scale.x));
 	game.scale.refresh();
+
 
 	
 	// console.log("Pixel Ratio: " + currentDevicePixelRatio);
@@ -517,8 +534,8 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 	let spriteWidth = prop.width;
 	let spriteHeight = prop.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
 	

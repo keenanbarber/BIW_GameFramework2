@@ -31,6 +31,11 @@ MyGame.MenuState.prototype = {
 
 		this.sceneProps = game.add.group();
 
+		text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+		text_test = game.add.text(game.world.centerX, game.world.centerY/2, "Some Title", text_test_style);
+		text_test.anchor.setTo(0.5);
+		this.sceneProps.add(text_test);
+
 
 		this.addButtons();
 
@@ -51,7 +56,9 @@ MyGame.MenuState.prototype = {
 	positionComponents: function(width, height) {
 		let isLandscape = (game.height / game.width < 1.3) ? true : false;
 		if(isLandscape) {
-
+			ScaleText(text_test, width/2, height, 10, 1);
+			text_test.x = game.world.centerX;
+			text_test.y = height/4;
 
 			ScaleSprite(this.button1.getSprite(), width/3, height/5, 10, 1);
 			this.button1.getSprite().x = width / 4;
@@ -66,7 +73,9 @@ MyGame.MenuState.prototype = {
 			this.button3.getSprite().y = height * 4/5 + this.button3.getSprite().height/2;
 		}
 		else {
-			
+			ScaleText(text_test, width, height, 20, 1);
+			text_test.x = game.world.centerX;
+			text_test.y = game.world.centerY/2;
 
 			ScaleSprite(this.button1.getSprite(), width/3, height/5, 10, 1);
 			this.button1.getSprite().x = width / 2;
