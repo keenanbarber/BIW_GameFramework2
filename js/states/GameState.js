@@ -28,7 +28,7 @@ MyGame.GameState.prototype = {
 	init: function(game_details_data, previousState) {
 		"use strict";
 		this.game_details_data = game_details_data;
-		this.MINIMUM_SWIPE_LENGTH = 40;
+		
 		
 
 		physics = Physics();
@@ -87,7 +87,7 @@ MyGame.GameState.prototype = {
 
 		let obj = this;
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
-			// console.log("Transition completed.");
+			console.log("Transition completed.");
 			obj.scanBoard();
 		});
 		
@@ -123,7 +123,8 @@ MyGame.GameState.prototype = {
 						let tileY = j * this.calculatedTileSize;
 
 						this.tileArray[i][j].setPosition(tileX, tileY);
-						ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+						if(this.tileArray[i][j].getSprite() != null)
+							ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 					}
 				}
 			}
@@ -167,8 +168,12 @@ MyGame.GameState.prototype = {
 		UpdateScreenInfo();
 		//console.log("Resized");
 
+		
 		this.positionComponents(width, height);
 		game.scale.refresh();
+		// this.updateBoard();
+		// this.scanBoard();
+		// tweenManager.stopAllTweens();
 	},
 
 	start_swipe: function(pointer) {
@@ -178,6 +183,7 @@ MyGame.GameState.prototype = {
 	    //this.game.state.start("GameState", false, false, this.game_details_data, this);
 	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    //Tweenimate_Breathe(this.thing1, 1.5, 1.5, 1200);
+	    // tweenManager.stopAllTweens();
 	},
 
 	end_swipe: function(pointer) {
@@ -191,7 +197,7 @@ MyGame.GameState.prototype = {
 
 		    //console.log(swipe_length);
 		    // if the swipe length is greater than the minimum, a swipe is detected
-		    if (swipe_length >= this.MINIMUM_SWIPE_LENGTH) {
+		    if (swipe_length >= configuration.min_sqipe_length) {
 		        let calculatedSwipeDirectionVector = new Phaser.Point(this.end_swipe_point.x - this.start_swipe_point.x, this.end_swipe_point.y - this.start_swipe_point.y).normalize();
 			    
 			    this.findDirectionOfSwipe(calculatedSwipeDirectionVector);
@@ -506,7 +512,7 @@ MyGame.GameState.prototype = {
 		else {
 			scoreMultiplier += 1;
 		}
-		
+		return foundAnything;
 	}, 
 
 	removeTiles: function(arr) {

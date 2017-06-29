@@ -194,6 +194,13 @@ function GroupTweenManager() {
 			}
 		}, this);
 	};
+	obj.stopAllTweens = function() {
+		for(let i = 0; i < this.tweenArray.length; i++) {
+			this.tweenArray[i].stop(true);
+		}
+		game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
+		this.bool = true;	
+	};
 	obj.getSize = function() {
 		return this.tweenArray.length;
 	}
@@ -277,6 +284,7 @@ function SpriteButton(x, y, imageKey) {
 	obj.inputDown = false;
 	obj.inputUp = false;
 
+	obj.storedScale = 1; // For animated scaling.
 
 	obj.sprite.events.onInputOver.add(function() {
 		obj.inputOver = true;
