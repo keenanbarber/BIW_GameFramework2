@@ -42,6 +42,7 @@ MyGame.GameState.prototype = {
 
 	create: function() {
 		"use strict"; 
+
 		let obj = this;
 		// Add events to check for swipe
 		this.game.input.onDown.add(this.start_swipe, this);
@@ -104,6 +105,15 @@ MyGame.GameState.prototype = {
 			this.gameTimer.start();
 			obj.scanBoard();
 		});
+
+
+
+		this.progress = game.add.graphics(0,0);
+		this.progress.lineStyle(2, '0x000000');
+		this.progress.beginFill('0x000000',1);
+		this.progress.drawRoundedRect(100,500,300,27,10);
+		this.progress.endFill();
+		this.progress.beginFill('0x999999',1); //For drawing progress
 		
 
 		this.positionComponents(game.width, game.height);
@@ -379,7 +389,7 @@ MyGame.GameState.prototype = {
 					} 
 					else {	// If selectedTile1 is full, save in selectedTile2 and...
 						selectedTile2 = obj;
-						if(selectedTile1 == selectedTile2) { // If the two selected tiles are the same, reset.
+						if(selectedTile1 === selectedTile2) { // If the two selected tiles are the same, reset.
 							selectedTile1 = null; 
 							selectedTile2 = null;
 							return;
@@ -443,7 +453,7 @@ MyGame.GameState.prototype = {
 		this.tileArray[x2][y2] = temp;
 		this.tileArray[x2][y2].setArrayPosition(x2, y2);
 	
-		let tween1 = game.add.tween(this.tileArray[x1][y1].getSprite()).to({ x: this.tileArray[x2][y2].getPositionX(), y: this.tileArray[x2][y2].getPositionY() }, 600, Phaser.Easing.Elastic.Out, true);
+		let tween1 = game.add.tween(this.tileArray[x1][y1].getSprite()).to({ x: this.tileArray[ x2 ][y2].getPositionX(), y: this.tileArray[x2][y2].getPositionY() }, 600, Phaser.Easing.Elastic.Out, true);
 		let tween2 = game.add.tween(this.tileArray[x2][y2].getSprite()).to({ x: this.tileArray[x1][y1].getPositionX(), y: this.tileArray[x1][y1].getPositionY() }, 600, Phaser.Easing.Elastic.Out, true);
 		tweenManager.addTween(tween1);
 		tweenManager.addTween(tween2);
