@@ -237,7 +237,7 @@ MyGame.MenuState.prototype = {
 			}
 		);
 		this.button1.setClickBehavior(function() {
-			console.log("CLICK");
+			// console.log("CLICK");
 			obj.game.state.start("GameState", false, false, this.game_details_data, obj);
 		});
 		this.sceneProps.add(this.button1.getSprite());
@@ -266,7 +266,7 @@ MyGame.MenuState.prototype = {
 			}
 		);
 		this.button2.setClickBehavior(function() {
-			console.log("CLICK");
+			// console.log("CLICK");
 		});
 		this.sceneProps.add(this.button2.getSprite());
 
@@ -294,7 +294,7 @@ MyGame.MenuState.prototype = {
 			}
 		);
 		this.button3.setClickBehavior(function() {
-			console.log("CLICK");
+			// console.log("CLICK");
 		});
 		this.sceneProps.add(this.button3.getSprite());
 	}

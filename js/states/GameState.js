@@ -82,7 +82,7 @@ MyGame.GameState.prototype = {
 			}
 		);
 		this.button.setClickBehavior(function() {
-			console.log("CLICK");
+			// console.log("CLICK");
 			obj.game.state.start("MenuState", false, false, this.game_details_data, obj);
 		});
 		this.sceneProps.add(this.button.getSprite());
@@ -99,6 +99,9 @@ MyGame.GameState.prototype = {
 		EnterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
 			console.log("Transition completed.");
+			this.gameTimer = game.time.create(false);
+			this.gameTimer.add(5000, test);
+			this.gameTimer.start();
 			obj.scanBoard();
 		});
 		
@@ -149,6 +152,7 @@ MyGame.GameState.prototype = {
 			ScaleSprite(this.button.getSprite(), width/3, height/3, 20, 1);
 			this.button.getSprite().x = width/6;
 			this.button.getSprite().y = height - 2*this.verticalMargin - this.button.getSprite().height/2;
+			this.button.updateIntendedScale();
 		}
 		else {
 			var availableGridSpace = width;
@@ -183,6 +187,7 @@ MyGame.GameState.prototype = {
 			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 10, 1);
 			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;
 			this.button.getSprite().y = height - this.verticalMargin/2;
+			this.button.updateIntendedScale();
 		}
 	},
 
