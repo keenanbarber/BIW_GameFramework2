@@ -133,6 +133,7 @@ function EnterNewScene(newScenesProps, _tween) {
 function ExitPreviousScene(previousScenesProps, _tween) {
 	let tween = TweenProps(previousScenesProps, _tween);
 	tween.onComplete.add(function() { ClearSceneProps(previousScenesProps); }, this);
+	tweenManager.clearTweenArray();
 	tweenManager.addTween(tween);
 }
 function ClearSceneProps(group) {
@@ -188,11 +189,20 @@ function GroupTweenManager() {
 		this.tweenArray.push(_tween);
 		_tween.onComplete.addOnce(function() {
 			this.tweenArray.pop(_tween);
+			// console.log(this.tweenArray.length + " tweens remaining.")
 			if(this.tweenArray.length == 0 && this.bool == false) {
-				game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
+				if(this.funcToCallOnComplete) {
+					game.time.events.add(Phaser.Timer.SECOND * 0.1, this.funcToCallOnComplete, this);
+				}
 				this.bool = true;
 			}
 		}, this);
+	};
+	obj.clearTweenArray = function() {
+		// for(let i = 0; i < this.tweenArray.length; i++) {
+		// 	this.tweenArray[i].stop(true);
+		// }
+		this.tweenArray = [];
 	};
 	obj.getSize = function() {
 		return this.tweenArray.length;
@@ -277,6 +287,7 @@ function SpriteButton(x, y, imageKey) {
 	obj.inputDown = false;
 	obj.inputUp = false;
 
+	obj.storedScale = 1; // For animated scaling.
 
 	obj.sprite.events.onInputOver.add(function() {
 		obj.inputOver = true;
@@ -455,8 +466,8 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	let spriteWidth = sprite._frame.width;
 	let spriteHeight = sprite._frame.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
 	
@@ -474,21 +485,38 @@ function ScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding,
 	
 }
 
-function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
-	//var scale = this.getSpriteScale(sprite._frame.width, sprite._frame.height, availableSpaceWidth, availableSpaceHeight, padding, isFullScale);
-	
+function GetScaleSprite(sprite, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
 	let currentDevicePixelRatio = window.devicePixelRatio;
+
+	let spriteWidth = sprite._frame.width;
+	let spriteHeight = sprite._frame.height;
+
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
+	
+	let scale = Math.min(widthRatio, heightRatio);
+	
+	return scale;
+}
+
+function ScaleText(text, availableSpaceWidth, availableSpaceHeight, padding, scaleMultiplier) {
+	let currentDevicePixelRatio = window.devicePixelRatio;
+	let maxWidth = 200 * currentDevicePixelRatio;
+
+	
 
 	let textWidth = text.width;
 	let textHeight = text.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (textWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (textHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (textWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (textHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
-	
-	text.scale.setTo(scale * scaleMultiplier, scale * scaleMultiplier);
+
+
+	text.scale.setTo((text.width * scale) / (text.width / text.scale.x), (text.width * scale) / (text.width / text.scale.x));
 	game.scale.refresh();
+
 
 	
 	// console.log("Pixel Ratio: " + currentDevicePixelRatio);
@@ -509,8 +537,8 @@ function ScaleGroup(prop, availableSpaceWidth, availableSpaceHeight, padding, sc
 	let spriteWidth = prop.width;
 	let spriteHeight = prop.height;
 
-	let widthRatio = ((availableSpaceWidth) - (2*padding)) / (spriteWidth);
-	let heightRatio = ((availableSpaceHeight) - (2*padding)) / (spriteHeight);
+	let widthRatio = ((availableSpaceWidth) - (2*padding*currentDevicePixelRatio)) / (spriteWidth);
+	let heightRatio = ((availableSpaceHeight) - (2*padding*currentDevicePixelRatio)) / (spriteHeight);
 	
 	let scale = Math.min(widthRatio, heightRatio);
 	

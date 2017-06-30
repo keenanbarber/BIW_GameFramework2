@@ -28,12 +28,12 @@ MyGame.GameState.prototype = {
 	init: function(game_details_data, previousState) {
 		"use strict";
 		this.game_details_data = game_details_data;
-		this.MINIMUM_SWIPE_LENGTH = 40;
+		
 		
 
 		physics = Physics();
 
-		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
+		ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_LEFT", 1000, Phaser.Easing.Bounce.Out));
 	},
 
 	preload: function() {
@@ -42,6 +42,7 @@ MyGame.GameState.prototype = {
 
 	create: function() {
 		"use strict"; 
+		let obj = this;
 		// Add events to check for swipe
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
@@ -53,7 +54,7 @@ MyGame.GameState.prototype = {
 
 		// this.exit_button = game.add.sprite(this.world.centerX, this.world.centerY, "blue_square");
 		// this.exit_button.anchor.setTo(0.5);	
-
+		
 		this.button = SpriteButton(100, 100, 'red_square');
 		this.button.setBehaviors(
 			function() { //On mouse over...
@@ -75,24 +76,27 @@ MyGame.GameState.prototype = {
 		);
 		this.button.setClickBehavior(function() {
 			console.log("CLICK");
+			obj.game.state.start("MenuState", false, false, this.game_details_data, obj);
 		});
 		this.sceneProps.add(this.button.getSprite());
 
 
-		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
-
 		this.initializeTiles();
-		this.positionComponents(game.width, game.height);
+		
+
+		
+		
 		// this.printBoard();
 
-		let obj = this;
+
+		EnterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
-			// console.log("Transition completed.");
+			console.log("Transition completed.");
 			obj.scanBoard();
 		});
 		
 
-
+		this.positionComponents(game.width, game.height);
 		// checkCookie(); // TEST
 		// this.addText();
 	},
@@ -123,7 +127,8 @@ MyGame.GameState.prototype = {
 						let tileY = j * this.calculatedTileSize;
 
 						this.tileArray[i][j].setPosition(tileX, tileY);
-						ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
+						if(this.tileArray[i][j].getSprite() != null)
+							ScaleSprite(this.tileArray[i][j].getSprite(), this.calculatedTileSize, this.calculatedTileSize, configuration.tile_padding, 1);
 					}
 				}
 			}
@@ -156,7 +161,7 @@ MyGame.GameState.prototype = {
 				}
 			}
 
-			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 20, 1);
+			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 10, 1);
 			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;
 			this.button.getSprite().y = height - this.verticalMargin/2;
 		}
@@ -167,8 +172,12 @@ MyGame.GameState.prototype = {
 		UpdateScreenInfo();
 		//console.log("Resized");
 
+		
 		this.positionComponents(width, height);
 		game.scale.refresh();
+		// this.updateBoard();
+		// this.scanBoard();
+		// tweenManager.stopAllTweens();
 	},
 
 	start_swipe: function(pointer) {
@@ -178,6 +187,7 @@ MyGame.GameState.prototype = {
 	    //this.game.state.start("GameState", false, false, this.game_details_data, this);
 	    this.start_swipe_point = new Phaser.Point(pointer.x, pointer.y);
 	    //Tweenimate_Breathe(this.thing1, 1.5, 1.5, 1200);
+	    // tweenManager.stopAllTweens();
 	},
 
 	end_swipe: function(pointer) {
@@ -191,7 +201,7 @@ MyGame.GameState.prototype = {
 
 		    //console.log(swipe_length);
 		    // if the swipe length is greater than the minimum, a swipe is detected
-		    if (swipe_length >= this.MINIMUM_SWIPE_LENGTH) {
+		    if (swipe_length >= configuration.min_swipe_length) {
 		        let calculatedSwipeDirectionVector = new Phaser.Point(this.end_swipe_point.x - this.start_swipe_point.x, this.end_swipe_point.y - this.start_swipe_point.y).normalize();
 			    
 			    this.findDirectionOfSwipe(calculatedSwipeDirectionVector);
@@ -269,6 +279,8 @@ MyGame.GameState.prototype = {
 		}
 		this.tileGroup.x = this.horizontalMargin + this.calculatedTileSize/2;
 		this.tileGroup.y = this.verticalMargin + this.calculatedTileSize/2;
+
+		this.sceneProps.add(this.tileGroup);
 	},
 
 	placeTile: function(x, y) {
@@ -332,7 +344,7 @@ MyGame.GameState.prototype = {
 				this.mouseOver = false;
 			},
 			function() { //On mouse down...
-				if(tweenManager.getSize() == 0) {
+				if(tweenManager.getSize() == 0 && (selectedTile1 == null || selectedTile2 == null)) {
 					// console.log("Down");
 					mouseDownObj = obj;
 					this.mouseDown = true;
@@ -506,7 +518,7 @@ MyGame.GameState.prototype = {
 		else {
 			scoreMultiplier += 1;
 		}
-		
+		return foundAnything;
 	}, 
 
 	removeTiles: function(arr) {
