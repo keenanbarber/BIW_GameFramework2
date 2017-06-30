@@ -15,7 +15,7 @@ var configuration = {
 	'board_columns' : 6, 
 	'board_rows' : 6, 
 	'tile_padding' : 2, 
-	'number_of_tiles' : 5, // Up to 5 right now
+	'number_of_tiles' : 4, // Up to 5 right now
 	'min_required_tiles_for_points' : 3
 };
 

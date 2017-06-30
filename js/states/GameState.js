@@ -289,16 +289,16 @@ MyGame.GameState.prototype = {
 		let num = RandomBetween(0, configuration.number_of_tiles-1);
 		switch(num) {
 			case 0: 
-				tile = this.tile(this, x, y, "yellow_square", "TYPE_0");
+				tile = this.tile(this, x, y, "tile_black", "TYPE_0");
 				break;
 			case 1: 
-				tile = this.tile(this, x, y, "blue_square", "TYPE_1");
+				tile = this.tile(this, x, y, "tile_red", "TYPE_1");
 				break;
 			case 2: 
-				tile = this.tile(this, x, y, "red_square", "TYPE_2");
+				tile = this.tile(this, x, y, "tile_blue", "TYPE_2");
 				break;
 			case 3: 
-				tile = this.tile(this, x, y, "green_square", "TYPE_3");
+				tile = this.tile(this, x, y, "tile_green", "TYPE_3");
 				break;
 			case 4: 
 				tile = this.tile(this, x, y, "purple_square", "TYPE_4");

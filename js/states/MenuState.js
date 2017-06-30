@@ -174,23 +174,25 @@ MyGame.MenuState.prototype = {
 		
 		let obj = this; // Reference to the scene
 
-		this.button1 = SpriteButton(100, 100, 'green_square');
+		this.button1 = SpriteButton(100, 100, 'button_start');
 		this.button1.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
+				this.getSprite().loadTexture('button_start_dark');
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
+				this.getSprite().loadTexture('button_start');
 			},
 			function() { //On mouse down...
 				// console.log("Down");
 				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				this.getSprite().loadTexture('red_square');
+				this.getSprite().loadTexture('button_start');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
-				this.getSprite().loadTexture('green_square');
+				this.getSprite().loadTexture('button_start');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
 			}
 		);
@@ -201,23 +203,25 @@ MyGame.MenuState.prototype = {
 		this.sceneProps.add(this.button1.getSprite());
 
 
-		this.button2 = SpriteButton(100, 100, 'green_square');
+		this.button2 = SpriteButton(100, 100, 'button_options');
 		this.button2.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
+				this.getSprite().loadTexture('button_options_dark');
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
+				this.getSprite().loadTexture('button_options');
 			},
 			function() { //On mouse down...
 				// console.log("Down");
 				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				this.getSprite().loadTexture('red_square');
+				this.getSprite().loadTexture('button_options');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
-				this.getSprite().loadTexture('green_square');
+				this.getSprite().loadTexture('button_options');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
 			}
 		);
@@ -227,23 +231,25 @@ MyGame.MenuState.prototype = {
 		this.sceneProps.add(this.button2.getSprite());
 
 
-		this.button3 = SpriteButton(100, 100, 'green_square');
+		this.button3 = SpriteButton(100, 100, 'button_exit');
 		this.button3.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
+				this.getSprite().loadTexture('button_exit_dark');
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
+				this.getSprite().loadTexture('button_exit');
 			},
 			function() { //On mouse down...
 				// console.log("Down");
 				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				this.getSprite().loadTexture('red_square');
+				// this.getSprite().loadTexture('button_exit');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
-				this.getSprite().loadTexture('green_square');
+				// this.getSprite().loadTexture('button_exit');
 				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
 			}
 		);

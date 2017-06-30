@@ -7,6 +7,21 @@
         "red_square": {"type": "image", "source": "assets/images/square_red.png"},
         "blue_square": {"type": "image", "source": "assets/images/square_blue.png"},
         "purple_square": {"type": "image", "source": "assets/images/square_purple.png"},
+
+        "tile_black": {"type": "image", "source": "assets/images/tile_black.png"},
+        "tile_red": {"type": "image", "source": "assets/images/tile_red.png"},
+        "tile_blue": {"type": "image", "source": "assets/images/tile_blue.png"},
+        "tile_green": {"type": "image", "source": "assets/images/tile_green.png"},
+
+        "button_start": {"type": "image", "source": "assets/images/button_start.png"},
+        "button_options": {"type": "image", "source": "assets/images/button_options.png"},
+        "button_exit": {"type": "image", "source": "assets/images/button_exit.png"},
+        "button_start_dark": {"type": "image", "source": "assets/images/button_start_dark.png"},
+        "button_options_dark": {"type": "image", "source": "assets/images/button_options_dark.png"},
+        "button_exit_dark": {"type": "image", "source": "assets/images/button_exit_dark.png"},
+
+        "title": {"type": "image", "source": "assets/images/title.png"},
+
         "test_rect": {"type": "image", "source": "assets/images/Test_Rect.png"},
         "test_bar": {"type": "image", "source": "assets/images/Test_Bar.png"},
         "test_spritesheet": {"type": "spritesheet", "source": "assets/images/Robot_Walking.png", "frame_width": 32, "frame_height": 32, "frame_count": 8},
