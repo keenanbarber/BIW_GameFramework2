@@ -54,24 +54,31 @@ MyGame.GameState.prototype = {
 
 		// this.exit_button = game.add.sprite(this.world.centerX, this.world.centerY, "blue_square");
 		// this.exit_button.anchor.setTo(0.5);	
+
+		this.background = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
+		this.background.anchor.setTo(0.5);
+		this.sceneProps.add(this.background);
 		
-		this.button = SpriteButton(100, 100, 'red_square');
+		this.button = SpriteButton(100, 100, 'button_exit');
 		this.button.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 1.1, this.getIntendedScale().y * 1.1, 1000);
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			},
 			function() { //On mouse down...
 				// console.log("Down");
-				this.getSprite().loadTexture('blue_square');
-				// Tweenimate_ElasticScale(this.getSprite(), 0.8, 0.8, 1000);
+				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
+				// this.getSprite().loadTexture('button_exit_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 0.8, this.getIntendedScale().y * 0.8, 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
-				this.getSprite().loadTexture('red_square');
-				// Tweenimate_ElasticScale(this.getSprite(), 1, 1, 1000);
+				this.getSprite().loadTexture('button_exit');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			}
 		);
 		this.button.setClickBehavior(function() {
@@ -133,9 +140,15 @@ MyGame.GameState.prototype = {
 				}
 			}
 
+			// Background
+			this.background.width = width;
+			this.background.height = height;
+			this.background.x = width/2;
+			this.background.y = height/2;
+
 			ScaleSprite(this.button.getSprite(), width/3, height/3, 20, 1);
 			this.button.getSprite().x = width/6;
-			this.button.getSprite().y = this.verticalMargin + this.button.getSprite().height / 2;
+			this.button.getSprite().y = height - 2*this.verticalMargin - this.button.getSprite().height/2;
 		}
 		else {
 			var availableGridSpace = width;
@@ -160,6 +173,12 @@ MyGame.GameState.prototype = {
 					}
 				}
 			}
+
+			// Background
+			this.background.width = width;
+			this.background.height = height;
+			this.background.x = width/2;
+			this.background.y = height/2;
 
 			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 10, 1);
 			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;

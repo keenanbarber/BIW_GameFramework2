@@ -275,6 +275,7 @@ function SpriteButton(x, y, imageKey) {
 	obj.sprite = game.add.sprite(x, y, imageKey);
 	obj.sprite.anchor.set(0.5);
 	obj.sprite.inputEnabled = true;
+	obj.intendedScale = new Phaser.Point(1, 1);;
 
 	obj.onInputOverFunc;
 	obj.onInputOutFunc;
@@ -286,8 +287,6 @@ function SpriteButton(x, y, imageKey) {
 	obj.inputOut = false;
 	obj.inputDown = false;
 	obj.inputUp = false;
-
-	obj.storedScale = 1; // For animated scaling.
 
 	obj.sprite.events.onInputOver.add(function() {
 		obj.inputOver = true;
@@ -335,6 +334,12 @@ function SpriteButton(x, y, imageKey) {
 	obj.setClickBehavior = function(onInputClickFunc) {
 		// console.log(this.onInputUpFunc);
 		this.onInputClickFunc = onInputClickFunc;
+	};
+	obj.updateIntendedScale = function() {
+		this.intendedScale = new Phaser.Point(this.sprite.scale.x, this.sprite.scale.y);
+	};
+	obj.getIntendedScale = function() {
+		return this.intendedScale;
 	};
 
     return obj;

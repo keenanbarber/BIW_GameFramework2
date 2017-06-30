@@ -21,6 +21,7 @@
         "button_exit_dark": {"type": "image", "source": "assets/images/button_exit_dark.png"},
 
         "title": {"type": "image", "source": "assets/images/title.png"},
+        "background": {"type": "image", "source": "assets/images/background.png"},
 
         "test_rect": {"type": "image", "source": "assets/images/Test_Rect.png"},
         "test_bar": {"type": "image", "source": "assets/images/Test_Bar.png"},

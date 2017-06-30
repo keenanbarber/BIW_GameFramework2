@@ -21,7 +21,7 @@ MyGame.MenuState.prototype = {
 
 		UpdateScreenInfo();
 		if(previousState)
-			ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_BOTTOM", 1000, Phaser.Easing.Bounce.Out));
+			ExitPreviousScene(previousState.sceneProps, TranslateTween("CENTER_TO_RIGHT", 1000, Phaser.Easing.Bounce.Out));
 	},
 	
 	preload: function() {
@@ -33,20 +33,23 @@ MyGame.MenuState.prototype = {
 
 		this.sceneProps = game.add.group();
 
-		text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-		text_test = game.add.text(game.world.centerX, game.world.centerY/2, "Some Title", text_test_style);
-		text_test.anchor.setTo(0.5);
-		this.sceneProps.add(text_test);
+		// text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+		// text_test = game.add.text(game.world.centerX, game.world.centerY/2, "Some Title", text_test_style);
+		// text_test.anchor.setTo(0.5);
+		// this.sceneProps.add(text_test);
 
 
-		this.addButtons();
+		
+
+
+		this.addComponents();
 
 
 		// Add events to check for swipe
 		this.game.input.onDown.add(this.start_swipe, this);
 		this.game.input.onUp.add(this.end_swipe, this);
 
-		EnterNewScene(this.sceneProps, TranslateTween("TOP_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
+		EnterNewScene(this.sceneProps, TranslateTween("LEFT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		this.positionComponents(game.width, game.height);
 	},
 
@@ -58,38 +61,68 @@ MyGame.MenuState.prototype = {
 	positionComponents: function(width, height) {
 		let isLandscape = (game.height / game.width < 1.3) ? true : false;
 		if(isLandscape) {
-			ScaleText(text_test, width/2, height, 10, 1);
-			text_test.x = game.world.centerX;
-			text_test.y = height/4;
+			// ScaleText(text_test, width/2, height, 10, 1);
+			// text_test.x = game.world.centerX;
+			// text_test.y = height/4;
 
+			// Background
+			this.background.width = width;
+			this.background.height = height;
+			this.background.x = width/2;
+			this.background.y = height/2;
+
+			// Title
+			ScaleSprite(this.title, width/2, height/3, 10, 1);
+			this.title.x = width * 3/4;
+			this.title.y = height/2;
+
+			// Buttons
 			ScaleSprite(this.button1.getSprite(), width/3, height/5, 10, 1);
 			this.button1.getSprite().x = width / 4;
-			this.button1.getSprite().y = height * 2/5 + this.button1.getSprite().height/2;
+			this.button1.getSprite().y = height * 1/4;
+			this.button1.updateIntendedScale();
 
 			ScaleSprite(this.button2.getSprite(), width/3, height/5, 10, 1);
 			this.button2.getSprite().x = width / 4;
-			this.button2.getSprite().y = height * 3/5 + this.button2.getSprite().height/2;
+			this.button2.getSprite().y = height * 2/4;
+			this.button2.updateIntendedScale();
 
 			ScaleSprite(this.button3.getSprite(), width/3, height/5, 10, 1);
 			this.button3.getSprite().x = width / 4;
-			this.button3.getSprite().y = height * 4/5 + this.button3.getSprite().height/2;
+			this.button3.getSprite().y = height * 3/4;
+			this.button3.updateIntendedScale();
 		}
 		else {
-			ScaleText(text_test, width, height, 20, 1);
-			text_test.x = game.world.centerX;
-			text_test.y = game.world.centerY/2;
+			// ScaleText(text_test, width, height, 20, 1);
+			// text_test.x = game.world.centerX;
+			// text_test.y = game.world.centerY/2;
 
-			ScaleSprite(this.button1.getSprite(), width/3, height/5, 10, 1);
+			// Background
+			this.background.width = width;
+			this.background.height = height;
+			this.background.x = width/2;
+			this.background.y = height/2;
+
+			// Title
+			ScaleSprite(this.title, width/2, height/3, 10, 1);
+			this.title.x = width/2;
+			this.title.y = height/4;
+
+			// Buttons
+			ScaleSprite(this.button1.getSprite(), width/2, height/5, 5, 1);
 			this.button1.getSprite().x = width / 2;
-			this.button1.getSprite().y = height * 2/5 + this.button1.getSprite().height/2;
+			this.button1.getSprite().y = height * 3/6;
+			this.button1.updateIntendedScale();
 
-			ScaleSprite(this.button2.getSprite(), width/3, height/5, 10, 1);
+			ScaleSprite(this.button2.getSprite(), width/2, height/5, 5, 1);
 			this.button2.getSprite().x = width / 2;
-			this.button2.getSprite().y = height * 3/5 + this.button2.getSprite().height/2;
+			this.button2.getSprite().y = height * 4/6;
+			this.button2.updateIntendedScale();
 
-			ScaleSprite(this.button3.getSprite(), width/3, height/5, 10, 1);
+			ScaleSprite(this.button3.getSprite(), width/2, height/5, 5, 1);
 			this.button3.getSprite().x = width / 2;
-			this.button3.getSprite().y = height * 4/5 + this.button3.getSprite().height/2;
+			this.button3.getSprite().y = height * 5/6;
+			this.button3.updateIntendedScale();
 		}
 	},
 
@@ -170,30 +203,37 @@ MyGame.MenuState.prototype = {
 		return bestVector;
 	}, 
 
-	addButtons: function() {
+	addComponents: function() {
 		
 		let obj = this; // Reference to the scene
+
+		this.background = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
+		this.background.anchor.setTo(0.5);
+		this.sceneProps.add(this.background);
+
+		this.title = game.add.sprite(game.world.centerX, game.world.centerY/2, 'title');
+		this.title.anchor.setTo(0.5);
+		this.sceneProps.add(this.title);
 
 		this.button1 = SpriteButton(100, 100, 'button_start');
 		this.button1.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
-				this.getSprite().loadTexture('button_start_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 1.1, this.getIntendedScale().y * 1.1, 1000);
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
-				this.getSprite().loadTexture('button_start');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			},
 			function() { //On mouse down...
 				// console.log("Down");
-				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				this.getSprite().loadTexture('button_start');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
+				// this.getSprite().loadTexture('button_start_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 0.8, this.getIntendedScale().y * 0.8, 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
 				this.getSprite().loadTexture('button_start');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			}
 		);
 		this.button1.setClickBehavior(function() {
@@ -207,22 +247,22 @@ MyGame.MenuState.prototype = {
 		this.button2.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
-				this.getSprite().loadTexture('button_options_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 1.1, this.getIntendedScale().y * 1.1, 1000);
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
-				this.getSprite().loadTexture('button_options');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			},
 			function() { //On mouse down...
 				// console.log("Down");
 				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				this.getSprite().loadTexture('button_options');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
+				// this.getSprite().loadTexture('button_options_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 0.8, this.getIntendedScale().y * 0.8, 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
 				this.getSprite().loadTexture('button_options');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			}
 		);
 		this.button2.setClickBehavior(function() {
@@ -235,22 +275,22 @@ MyGame.MenuState.prototype = {
 		this.button3.setBehaviors(
 			function() { //On mouse over...
 				// console.log("Over");
-				this.getSprite().loadTexture('button_exit_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 1.1, this.getIntendedScale().y * 1.1, 1000);
 			}, 
 			function() { //On mouse off...
 				// console.log("Off");
-				this.getSprite().loadTexture('button_exit');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			},
 			function() { //On mouse down...
 				// console.log("Down");
 				this.storedScale = new Phaser.Point(this.getSprite().scale.x, this.getSprite().scale.y);
-				// this.getSprite().loadTexture('button_exit');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x - (this.storedScale.x * 0.2), this.storedScale.y - (this.storedScale.y * 0.2), 1000);
+				// this.getSprite().loadTexture('button_exit_dark');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x * 0.8, this.getIntendedScale().y * 0.8, 1000);
 			}, 
 			function() { //On mouse up...
 				// console.log("Up");
-				// this.getSprite().loadTexture('button_exit');
-				Tweenimate_ElasticScale(this.getSprite(), this.storedScale.x, this.storedScale.y, 1000);
+				this.getSprite().loadTexture('button_exit');
+				Tweenimate_ElasticScale(this.getSprite(), this.getIntendedScale().x, this.getIntendedScale().y, 1000);
 			}
 		);
 		this.button3.setClickBehavior(function() {
