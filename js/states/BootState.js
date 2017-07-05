@@ -43,6 +43,7 @@ MyGame.BootState.prototype = {
 		"use strict"; 
 		this.load.text("game_details", this.game_details);
 		this.load.image("loading", "assets/images/snake.png")
+		game.load.bitmapFont('testFont', 'assets/fonts/eightbitwonder.png', 'assets/fonts/eightbitwonder.xml');
 	}, 
 
 	create: function() {

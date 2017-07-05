@@ -17,7 +17,7 @@ MyGame.LoadingState.prototype = {
 	preload: function() {
 		"use strict"; 
 
-		// this.stage.backgroundColor = 0x222222;
+		// this.stage.backgroundColor = 0xBB4242;
 		// var loadingBar = this.add.sprite(this.world.centerX, this.world.centerY, "loading");
 		// loadingBar.anchor.setTo(0.5);
 		// this.load.setPreloadSprite(loadingBar);
@@ -27,7 +27,7 @@ MyGame.LoadingState.prototype = {
 		user_details = this.game_details_data.user_details;
 		for(user_detail_key in user_details) {
 			if(user_details.hasOwnProperty(user_detail_key)) { // Makes sure the key exists in the assets.
-				detail = user_details[user_detail_key];
+				detail = user_details[ user_detail_key ];
 
 				switch(user_detail_key) {
 					case "name": 
@@ -60,6 +60,20 @@ MyGame.LoadingState.prototype = {
 	            }
 	        }
 	    }
+
+
+
+
+	    // this.preloadBar = game.add.graphics(0, 50);  
+	    // this.preloadBar.lineStyle(3, 0xffffff, 1);  
+	    // this.preloadBar.moveTo(0, 0);  
+	    // this.preloadBar.lineTo(game.width, 0);      
+	    // this.preloadBar.scale.x = 0; // set the bar to the beginning position
+	},
+
+	loadUpdate: function() {  // every frame during loading, set the scale.x of the bar to the progress (an integer between 0  // and 100) divided by 100 to give a float between 0 and 1  
+		// this.preloadBar.scale.x = game.load.progress * 0.01;
+		// console.log("Loading Bar...");
 	},
 
 	create: function() {

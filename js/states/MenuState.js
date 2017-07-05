@@ -25,7 +25,7 @@ MyGame.MenuState.prototype = {
 	},
 	
 	preload: function() {
-
+		
 	},
 
 	create: function() {
@@ -33,16 +33,14 @@ MyGame.MenuState.prototype = {
 
 		this.sceneProps = game.add.group();
 
-		// text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
-		// text_test = game.add.text(game.world.centerX, game.world.centerY/2, "Some Title", text_test_style);
-		// text_test.anchor.setTo(0.5);
-		// this.sceneProps.add(text_test);
-
-
-		
-
 
 		this.addComponents();
+
+
+		// text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+		// text_test = game.add.bitmapText(game.world.centerX, 20, 'testFont', "Testing", 20);
+		// text_test.anchor.setTo(0.5);
+		// this.sceneProps.add(text_test);
 
 
 		// Add events to check for swipe

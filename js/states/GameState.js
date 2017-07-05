@@ -56,9 +56,20 @@ MyGame.GameState.prototype = {
 		// this.exit_button = game.add.sprite(this.world.centerX, this.world.centerY, "blue_square");
 		// this.exit_button.anchor.setTo(0.5);	
 
+		// Background
 		this.background = game.add.sprite(game.world.centerX, game.world.centerY, 'background');
 		this.background.anchor.setTo(0.5);
 		this.sceneProps.add(this.background);
+
+		// Progress Bar
+		// this.progress = game.add.graphics(0,0);
+		// this.progress.lineStyle(2, '0x000000');
+		// this.progress.beginFill('0x000000',1);
+		// this.progress.drawRoundedRect(0,0,300,27,10);
+		// this.progress.endFill();
+		// this.progress.beginFill('0x999999',1); //For drawing progress
+		// this.sceneProps.add(this.progress);
+
 		
 		this.button = SpriteButton(100, 100, 'button_exit');
 		this.button.setBehaviors(
@@ -84,6 +95,7 @@ MyGame.GameState.prototype = {
 		);
 		this.button.setClickBehavior(function() {
 			// console.log("CLICK");
+			score = 0;
 			obj.game.state.start("MenuState", false, false, this.game_details_data, obj);
 		});
 		this.sceneProps.add(this.button.getSprite());
@@ -100,21 +112,11 @@ MyGame.GameState.prototype = {
 		EnterNewScene(this.sceneProps, TranslateTween("RIGHT_TO_CENTER", 1000, Phaser.Easing.Bounce.Out));
 		tweenManager.callOnComplete(function() { // When the tiles are finished swapping...
 			console.log("Transition completed.");
-			this.gameTimer = game.time.create(false);
-			this.gameTimer.add(5000, test);
-			this.gameTimer.start();
+			// this.gameTimer = game.time.create(false);
+			// this.gameTimer.add(5000, test);
+			// this.gameTimer.start();
 			obj.scanBoard();
 		});
-
-
-
-		this.progress = game.add.graphics(0,0);
-		this.progress.lineStyle(2, '0x000000');
-		this.progress.beginFill('0x000000',1);
-		this.progress.drawRoundedRect(100,500,300,27,10);
-		this.progress.endFill();
-		this.progress.beginFill('0x999999',1); //For drawing progress
-		
 
 		this.positionComponents(game.width, game.height);
 		// checkCookie(); // TEST
@@ -161,7 +163,7 @@ MyGame.GameState.prototype = {
 
 			ScaleSprite(this.button.getSprite(), width/3, height/3, 20, 1);
 			this.button.getSprite().x = width/6;
-			this.button.getSprite().y = height - 2*this.verticalMargin - this.button.getSprite().height/2;
+			this.button.getSprite().y = this.verticalMargin + this.button.getSprite().height/2;
 			this.button.updateIntendedScale();
 		}
 		else {
@@ -194,10 +196,15 @@ MyGame.GameState.prototype = {
 			this.background.x = width/2;
 			this.background.y = height/2;
 
+			// Exit Button
 			ScaleSprite(this.button.getSprite(), width / 2 - this.horizontalMargin, this.verticalMargin, 10, 1);
 			this.button.getSprite().x = this.horizontalMargin + this.button.getSprite().width/2;
-			this.button.getSprite().y = height - this.verticalMargin/2;
+			this.button.getSprite().y = height - this.verticalMargin + this.button.getSprite().height;
 			this.button.updateIntendedScale();
+
+			// Progress Bar
+			// this.progress.position.set(this.horizontalMargin, this.verticalMargin - this.progress.height - this.calculatedTileSize/2);
+			// this.progress.width = (availableGridSpace * 0.8);
 		}
 	},
 
