@@ -615,6 +615,12 @@ _________________________________________
 		let walk = spriteThing.animations.add('walk', [1, 2, 3], 12, true, true); // anim name, frames to play, fps, loop?, useNumericIndex?
 		spriteThing.animations.play('walk', 12, true);
 
+	FOR TEXT... 
+		text_test_style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "center", boundsAlignV: "middle" };
+		text_test = game.add.bitmapText(game.world.centerX, 20, 'testFont', "Testing", 20);
+		text_test.anchor.setTo(0.5);
+		this.sceneProps.add(text_test);
+
 _________________________________________*/
 	
 

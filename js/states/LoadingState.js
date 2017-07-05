@@ -17,11 +17,6 @@ MyGame.LoadingState.prototype = {
 	preload: function() {
 		"use strict"; 
 
-		// this.stage.backgroundColor = 0xBB4242;
-		// var loadingBar = this.add.sprite(this.world.centerX, this.world.centerY, "loading");
-		// loadingBar.anchor.setTo(0.5);
-		// this.load.setPreloadSprite(loadingBar);
-
 		// USER DETAILS
 		var user_details, user_detail_key, detail;
 		user_details = this.game_details_data.user_details;
@@ -63,7 +58,7 @@ MyGame.LoadingState.prototype = {
 
 
 
-
+	    // PRELOAD BAR
 	    // this.preloadBar = game.add.graphics(0, 50);  
 	    // this.preloadBar.lineStyle(3, 0xffffff, 1);  
 	    // this.preloadBar.moveTo(0, 0);  

@@ -11,12 +11,7 @@ var configuration = {
 	'canvas_height' : 650,						
 	'scale_ratio' : 1,			
 	'min_swipe_length' : 10,				
-	'aspect_ratio' : 1, 
-	'board_columns' : 6, 
-	'board_rows' : 6, 
-	'tile_padding' : 2, 
-	'number_of_tiles' : 4, // Up to 5 right now
-	'min_required_tiles_for_points' : 3
+	'aspect_ratio' : 1
 };
 
 
